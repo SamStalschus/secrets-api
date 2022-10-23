@@ -13,3 +13,22 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+*.env
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+.DS_STORE
+
+launch.json
+
+*.iml
+
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+/.idea/
