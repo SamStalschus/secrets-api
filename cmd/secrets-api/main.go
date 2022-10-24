@@ -2,21 +2,47 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+	"secrets-api/cmd/secrets-api/user_ctrl"
+	"secrets-api/domain"
+	"secrets-api/domain/user"
 	"secrets-api/infra/env"
+	apierr "secrets-api/infra/errors"
+	"secrets-api/infra/log"
+	"secrets-api/infra/log/jsonlogs"
+	"secrets-api/infra/mongodb"
+	"secrets-api/infra/mongodb/user_repo"
 )
 
-func main() {
-	port := env.GetString("PORT", "8080")
+var userController user_ctrl.Controller
+var logger log.Provider
+var apiErrors apierr.Provider
 
+func main() {
+
+	port := env.GetString("PORT", "8080")
+	logLevel := env.GetString("LOG_LEVEL", "INFO")
+	databaseURI := env.GetString("DATABASE_URI", "")
+
+	logger = jsonlogs.New(logLevel, domain.GetCtxValues)
+	apiErrors := apierr.New()
+
+	db, ctx := mongodb.GetConnection(logger, databaseURI)
+	defer db.Disconnect(ctx)
+
+	mongoRepository := mongodb.NewRepository(db)
+
+	userRepository := user_repo.NewRepository(&mongoRepository)
+	userService := user.NewService(logger, &userRepository, apiErrors)
+	userController = user_ctrl.NewController(userService, logger, apiErrors)
+
+	logger.Info(ctx, fmt.Sprintf("Listening on port %s", port), log.Body{})
 	if err := run(port); err != nil {
-		log.Fatal(fmt.Sprintf("Error to start server on port: %s - Erro: %s ", port, err))
+		logger.Fatal(ctx, fmt.Sprintf("Error to start server on port: %s - Erro: %s ", port, err), log.Body{})
 	}
 }
 
 func run(port string) error {
-	log.Println("Listening on port", port)
-	handler := http.HandlerFunc(serve)
+	handler := http.HandlerFunc(Server)
 	return http.ListenAndServe(":"+port, handler)
 }
