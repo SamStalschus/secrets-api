@@ -1,22 +1,32 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"regexp"
+	"secrets-api/cmd/secrets-api/middlewares"
+	"secrets-api/domain"
+	"secrets-api/infra/log"
 	"strconv"
 	"strings"
 )
 
-var routes = []route{
-	newRoute("POST", "/users", createUser),
-	newRoute("PUT", "/users", updateUser),
-	newRoute("GET", "/users/([0-9]+)", getUser),
-	newRoute("GET", "/users/secrets/([^/]+)", getUserSecrets),
-	newRoute("POST", "/secrets", createSecret),
-	newRoute("GET", "/secret/([^/]+)", getSecret),
-	newRoute("PUT", "/secret/([0-9]+)", updateSecret),
+var routes []route
+
+func initializeRoutes() {
+	routes = []route{
+		newRoute("POST", "/users",
+			middlewares.HandleRequestID(middlewares.RequestLogger(userController.SignUp, logger))),
+		newRoute("PUT", "/users", updateUser),
+
+		newRoute("GET", "/users/([0-9]+)",
+			middlewares.HandleRequestID(middlewares.RequestLogger(userController.GetUser, logger))),
+
+		newRoute("GET", "/users/secrets/([^/]+)", getUserSecrets),
+		newRoute("POST", "/secrets", createSecret),
+		newRoute("GET", "/secret/([^/]+)", getSecret),
+		newRoute("PUT", "/secret/([0-9]+)", updateSecret),
+	}
 }
 
 func newRoute(method, pattern string, handler http.HandlerFunc) route {
@@ -29,7 +39,8 @@ type route struct {
 	handler http.HandlerFunc
 }
 
-func serve(w http.ResponseWriter, r *http.Request) {
+func Server(w http.ResponseWriter, r *http.Request) {
+	initializeRoutes()
 	var allow []string
 	for _, route := range routes {
 		matches := route.regex.FindStringSubmatch(r.URL.Path)
@@ -38,7 +49,9 @@ func serve(w http.ResponseWriter, r *http.Request) {
 				allow = append(allow, route.method)
 				continue
 			}
-			ctx := context.WithValue(r.Context(), ctxKey{}, matches[1:])
+			ctx := domain.CtxWithValues(r.Context(), log.Body{
+				"CtxKey": matches[1:],
+			})
 			route.handler(w, r.WithContext(ctx))
 			return
 		}
@@ -51,30 +64,13 @@ func serve(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-type ctxKey struct{}
-
-func getField(r *http.Request, index int) string {
-	fields := r.Context().Value(ctxKey{}).([]string)
-	return fields[index]
-}
-
-func createUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "createUser\n")
-}
-
 func updateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "updateUser\n")
 }
 
-func getUser(w http.ResponseWriter, r *http.Request) {
-	slug := getField(r, 0)
-	id, _ := strconv.Atoi(getField(r, 0))
-	fmt.Fprintf(w, "getUser %s %d\n", slug, id)
-}
-
 func getUserSecrets(w http.ResponseWriter, r *http.Request) {
-	slug := getField(r, 0)
-	id, _ := strconv.Atoi(getField(r, 1))
+	slug := domain.GetFields(r, "CtxKey", 0)
+	id, _ := strconv.Atoi(domain.GetFields(r, "CtxKey", 1))
 	fmt.Fprintf(w, "getUserSecrets %s %d\n", slug, id)
 }
 
@@ -87,6 +83,6 @@ func getSecret(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateSecret(w http.ResponseWriter, r *http.Request) {
-	slug := getField(r, 0)
+	slug := domain.GetFields(r, "CtxKey", 0)
 	fmt.Fprintf(w, "updateSecret %s\n", slug)
 }
