@@ -7,8 +7,7 @@ import (
 const InternalServerError = "Internal server error"
 
 // Client is the APIERROR client
-type Client struct {
-}
+type Client struct{}
 
 // New return new client of api errors
 func New() *Client {

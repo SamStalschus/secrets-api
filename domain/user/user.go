@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+
 	"golang.org/x/crypto/bcrypt"
 	"secrets-api/domain"
 	"secrets-api/infra/errors"
@@ -10,7 +11,7 @@ import (
 	"secrets-api/infra/mongodb/user_repo"
 )
 
-//go:generate mockgen -destination=./mocks.go -package=user -source=./user.go
+//go:generate mockgen -destination=./mocks.go -package=user -source=./contracts.go
 
 type Service struct {
 	logger     log.Provider

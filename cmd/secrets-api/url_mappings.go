@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"strconv"
+	"strings"
+
 	"secrets-api/cmd/secrets-api/middlewares"
 	"secrets-api/domain"
 	"secrets-api/infra/log"
-	"strconv"
-	"strings"
 )
 
 var routes []route

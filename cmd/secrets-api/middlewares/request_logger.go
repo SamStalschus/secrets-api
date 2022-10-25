@@ -3,8 +3,9 @@ package middlewares
 import (
 	"io/ioutil"
 	"net/http"
-	"secrets-api/infra/log"
 	"time"
+
+	"secrets-api/infra/log"
 )
 
 func RequestLogger(h http.HandlerFunc, logger log.Provider) http.HandlerFunc {

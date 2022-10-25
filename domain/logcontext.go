@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"net/http"
+
 	"secrets-api/infra/maps"
 )
 

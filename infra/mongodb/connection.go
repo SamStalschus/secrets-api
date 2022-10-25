@@ -2,10 +2,11 @@ package mongodb
 
 import (
 	"context"
+	"time"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"secrets-api/infra/log"
-	"time"
 )
 
 func GetConnection(logger log.Provider, uri string) (*mongo.Client, context.Context) {

@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	"secrets-api/domain"
 	apierr "secrets-api/infra/errors"
 )

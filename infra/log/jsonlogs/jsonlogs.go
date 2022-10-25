@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"secrets-api/infra/log"
-	"secrets-api/infra/maps"
 	"strings"
 	"time"
+
+	"secrets-api/infra/log"
+	"secrets-api/infra/maps"
 )
 
 // Client is the logger client, to instantiate it call `New()`
@@ -117,8 +118,8 @@ func buildJSONString(level string, title string, body log.Body) string {
 	delete(body, "title")
 	delete(body, "timestamp")
 
-	var separator = ""
-	var bodyJSON = []byte("{}")
+	separator := ""
+	bodyJSON := []byte("{}")
 	var err error
 	if len(body) > 0 {
 		separator = ","

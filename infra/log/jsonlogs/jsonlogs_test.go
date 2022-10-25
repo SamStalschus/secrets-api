@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"secrets-api/domain"
-	"secrets-api/infra/log"
-	tt "secrets-api/infra/testtools"
 	"strings"
 	"testing"
 	"time"
+
+	"secrets-api/domain"
+	"secrets-api/infra/log"
+	tt "secrets-api/infra/testtools"
 
 	"github.com/stretchr/testify/assert"
 )

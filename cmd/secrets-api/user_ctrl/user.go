@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
 	"secrets-api/domain"
 	"secrets-api/domain/user"
 	apiErr "secrets-api/infra/errors"

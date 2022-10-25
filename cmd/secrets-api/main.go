@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+
 	"secrets-api/cmd/secrets-api/user_ctrl"
 	"secrets-api/domain"
 	"secrets-api/domain/user"
@@ -14,12 +15,13 @@ import (
 	"secrets-api/infra/mongodb/user_repo"
 )
 
-var userController *user_ctrl.Controller
-var logger log.Provider
-var apiErrors apierr.Provider
+var (
+	userController *user_ctrl.Controller
+	logger         log.Provider
+	apiErrors      apierr.Provider
+)
 
 func main() {
-
 	port := env.GetString("PORT", "8080")
 	logLevel := env.GetString("LOG_LEVEL", "INFO")
 	databaseURI := env.GetString("DATABASE_URI", "")

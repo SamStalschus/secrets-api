@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+
 	"secrets-api/domain"
 	"secrets-api/infra/log"
 )
