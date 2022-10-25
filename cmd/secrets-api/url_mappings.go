@@ -17,11 +17,11 @@ func initializeRoutes() {
 	routes = []route{
 		newRoute("POST", "/users",
 			middlewares.HandleRequestID(middlewares.RequestLogger(userController.SignUp, logger))),
+
+		newRoute("GET", "/users/([^/]+)",
+			middlewares.HandleRequestID(middlewares.RequestLogger(userController.GetUserByEmail, logger))),
+
 		newRoute("PUT", "/users", updateUser),
-
-		newRoute("GET", "/users/([0-9]+)",
-			middlewares.HandleRequestID(middlewares.RequestLogger(userController.GetUser, logger))),
-
 		newRoute("GET", "/users/secrets/([^/]+)", getUserSecrets),
 		newRoute("POST", "/secrets", createSecret),
 		newRoute("GET", "/secret/([^/]+)", getSecret),

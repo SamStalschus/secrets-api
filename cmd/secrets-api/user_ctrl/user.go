@@ -9,7 +9,6 @@ import (
 	"secrets-api/domain/user"
 	apiErr "secrets-api/infra/errors"
 	"secrets-api/infra/log"
-	"strconv"
 )
 
 type Controller struct {
@@ -31,12 +30,10 @@ func NewController(
 }
 
 func (c Controller) SignUp(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		c.logger.Error(ctx, "Bad Request - Fail to read body", log.Body{})
+		c.logger.Error(r.Context(), "Bad Request - Fail to read body", log.Body{})
 		return
 	}
 
@@ -45,25 +42,29 @@ func (c Controller) SignUp(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		c.logger.Error(ctx, "Bad Request - Fail to unmarshal body", log.Body{})
+		c.logger.Error(r.Context(), "Bad Request - Fail to unmarshal body", log.Body{})
 		return
 	}
 
 	errResponse := c.validateBody(&user)
 	if errResponse != nil {
 		response, _ := json.Marshal(errResponse)
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(errResponse.ErrorStatus)
 		w.Write(response)
-		c.logger.Error(ctx, fmt.Sprintf("Bad Request - Error %v", errResponse.Error), log.Body{})
+		c.logger.Error(r.Context(),
+			fmt.Sprintf("Error %v - Status %v", errResponse.Error, errResponse.ErrorStatus), log.Body{})
 		return
 	}
 
 	errResponse = c.usersService.CreateUser(r.Context(), &user)
 	if errResponse != nil {
 		response, _ := json.Marshal(errResponse)
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(errResponse.ErrorStatus)
 		w.Write(response)
-		c.logger.Error(ctx, fmt.Sprintf("Bad Request - Error %v", errResponse.Error), log.Body{})
+		c.logger.Error(r.Context(),
+			fmt.Sprintf("Error %v - Status %v", errResponse.Error, errResponse.ErrorStatus), log.Body{})
 		return
 	}
 
@@ -71,11 +72,29 @@ func (c Controller) SignUp(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (c Controller) GetUser(w http.ResponseWriter, r *http.Request) {
-	id, _ := strconv.Atoi(domain.GetFields(r, "CtxKey", 0))
-	userText := c.usersService.GetUser(r.Context(), id)
+func (c Controller) GetUserByEmail(w http.ResponseWriter, r *http.Request) {
+	email := domain.GetFields(r, "CtxKey", 0)
 
-	w.Write([]byte(userText))
+	user, errResponse := c.usersService.GetUserByEmail(r.Context(), email)
+	if errResponse != nil {
+		response, _ := json.Marshal(errResponse)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(errResponse.ErrorStatus)
+		w.Write(response)
+		c.logger.Error(r.Context(),
+			fmt.Sprintf("Error %v - Status %v", errResponse.Error, errResponse.ErrorStatus), log.Body{})
+		return
+	}
+
+	userRes, err := json.Marshal(user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.logger.Error(r.Context(), "Internal Server - Fail to unmarshal body", log.Body{})
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(userRes)
 }
 
 func (c Controller) validateBody(user *domain.User) (apiErr *apiErr.Message) {

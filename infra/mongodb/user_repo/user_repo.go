@@ -4,7 +4,6 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"secrets-api/domain"
 	"secrets-api/infra/mongodb"
@@ -29,16 +28,13 @@ func (r Repository) CreateUser(ctx context.Context, user *domain.User) (string, 
 	return res.InsertedID.(primitive.ObjectID).Hex(), err
 }
 
-func (r Repository) FindUserByEmail(ctx context.Context, email string) (error, *mongo.SingleResult) {
-	projection := options.FindOne().SetProjection(bson.E{Key: "password", Value: 0})
+func (r Repository) FindUserByEmail(ctx context.Context, email string) (user *domain.User, err error) {
+	projection := options.FindOne().SetProjection(bson.M{"password": 0})
 
-	res := r.repository.FindOne(ctx, collection, bson.M{"email": email}, projection)
-
-	var result bson.D
-
-	err := res.Decode(&result)
-
+	err = r.repository.FindOne(ctx, collection, bson.M{"email": email}, projection).Decode(&user)
 	if err != nil {
-		return err, nil
+		return user, err
 	}
+
+	return user, err
 }
