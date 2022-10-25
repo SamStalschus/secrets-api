@@ -10,11 +10,11 @@ import (
 )
 
 type Repository struct {
-	repository *mongodb.Repository
+	repository mongodb.IRepository
 }
 
 func NewRepository(
-	repository *mongodb.Repository,
+	repository mongodb.IRepository,
 ) Repository {
 	return Repository{
 		repository: repository,

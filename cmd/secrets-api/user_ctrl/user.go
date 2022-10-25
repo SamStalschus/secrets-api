@@ -12,18 +12,18 @@ import (
 )
 
 type Controller struct {
-	usersService user.Service
+	usersService user.IService
 	logger       log.Provider
 	apiErr       apiErr.Provider
 }
 
 func NewController(
-	userService user.Service,
+	usersService user.IService,
 	logger log.Provider,
 	apiErr apiErr.Provider,
-) Controller {
-	return Controller{
-		usersService: userService,
+) *Controller {
+	return &Controller{
+		usersService: usersService,
 		logger:       logger,
 		apiErr:       apiErr,
 	}

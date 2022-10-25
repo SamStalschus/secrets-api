@@ -12,13 +12,13 @@ import (
 
 type Service struct {
 	logger     log.Provider
-	repository *user_repo.Repository
+	repository user_repo.IRepository
 	apiErr     apierr.Provider
 }
 
 func NewService(
 	logger log.Provider,
-	repository *user_repo.Repository,
+	repository user_repo.IRepository,
 	apiErr apierr.Provider,
 ) Service {
 	return Service{

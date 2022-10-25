@@ -14,7 +14,7 @@ import (
 	"secrets-api/infra/mongodb/user_repo"
 )
 
-var userController user_ctrl.Controller
+var userController *user_ctrl.Controller
 var logger log.Provider
 var apiErrors apierr.Provider
 
