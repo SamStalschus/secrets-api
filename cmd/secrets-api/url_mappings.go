@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/SamStalschus/secrets-api/cmd/secrets-api/middlewares"
-	"github.com/SamStalschus/secrets-api/domain"
 	"github.com/SamStalschus/secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/internal"
 )
 
 var routes []route
@@ -50,7 +50,7 @@ func Server(w http.ResponseWriter, r *http.Request) {
 				allow = append(allow, route.method)
 				continue
 			}
-			ctx := domain.CtxWithValues(r.Context(), log.Body{
+			ctx := internal.CtxWithValues(r.Context(), log.Body{
 				"CtxKey": matches[1:],
 			})
 			route.handler(w, r.WithContext(ctx))
@@ -70,8 +70,8 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUserSecrets(w http.ResponseWriter, r *http.Request) {
-	slug := domain.GetFields(r, "CtxKey", 0)
-	id, _ := strconv.Atoi(domain.GetFields(r, "CtxKey", 1))
+	slug := internal.GetFields(r, "CtxKey", 0)
+	id, _ := strconv.Atoi(internal.GetFields(r, "CtxKey", 1))
 	fmt.Fprintf(w, "getUserSecrets %s %d\n", slug, id)
 }
 
@@ -84,6 +84,6 @@ func getSecret(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateSecret(w http.ResponseWriter, r *http.Request) {
-	slug := domain.GetFields(r, "CtxKey", 0)
+	slug := internal.GetFields(r, "CtxKey", 0)
 	fmt.Fprintf(w, "updateSecret %s\n", slug)
 }

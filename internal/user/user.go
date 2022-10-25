@@ -7,9 +7,9 @@ import (
 	"github.com/SamStalschus/secrets-api/infra/bcrypt"
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
 
-	"github.com/SamStalschus/secrets-api/domain"
 	"github.com/SamStalschus/secrets-api/infra/log"
 	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
+	"github.com/SamStalschus/secrets-api/internal"
 )
 
 type Service struct {
@@ -33,7 +33,7 @@ func NewService(
 	}
 }
 
-func (s Service) CreateUser(ctx context.Context, user *domain.User) (apiErr *apierr.Message) {
+func (s Service) CreateUser(ctx context.Context, user *internal.User) (apiErr *apierr.Message) {
 	userAlreadyExists, _ := s.repository.FindUserByEmail(ctx, user.Email)
 
 	if userAlreadyExists != nil {
@@ -57,7 +57,7 @@ func (s Service) CreateUser(ctx context.Context, user *domain.User) (apiErr *api
 	return apiErr
 }
 
-func (s Service) GetUserByEmail(ctx context.Context, userEmail string) (user *domain.User, apiErr *apierr.Message) {
+func (s Service) GetUserByEmail(ctx context.Context, userEmail string) (user *internal.User, apiErr *apierr.Message) {
 	user, _ = s.repository.FindUserByEmail(ctx, userEmail)
 
 	if user == nil {

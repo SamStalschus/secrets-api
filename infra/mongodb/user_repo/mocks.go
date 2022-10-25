@@ -6,7 +6,7 @@ package user_repo
 
 import (
 	context "context"
-	domain "github.com/SamStalschus/secrets-api/domain"
+	domain "github.com/SamStalschus/secrets-api/internal"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"

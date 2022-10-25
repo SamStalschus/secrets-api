@@ -7,14 +7,14 @@ import (
 	"github.com/SamStalschus/secrets-api/infra/bcrypt"
 
 	"github.com/SamStalschus/secrets-api/cmd/secrets-api/user_ctrl"
-	"github.com/SamStalschus/secrets-api/domain"
-	"github.com/SamStalschus/secrets-api/domain/user"
 	"github.com/SamStalschus/secrets-api/infra/env"
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
 	"github.com/SamStalschus/secrets-api/infra/log"
 	"github.com/SamStalschus/secrets-api/infra/log/jsonlogs"
 	"github.com/SamStalschus/secrets-api/infra/mongodb"
 	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
+	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/SamStalschus/secrets-api/internal/user"
 )
 
 var (
@@ -28,7 +28,7 @@ func main() {
 	logLevel := env.GetString("LOG_LEVEL", "INFO")
 	databaseURI := env.GetString("DATABASE_URI", "")
 
-	logger = jsonlogs.New(logLevel, domain.GetCtxValues)
+	logger = jsonlogs.New(logLevel, internal.GetCtxValues)
 	apiErrors := apierr.New()
 	bcryptClient := bcrypt.NewClient()
 

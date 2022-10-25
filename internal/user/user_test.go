@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/SamStalschus/secrets-api/domain"
 	"github.com/SamStalschus/secrets-api/infra/bcrypt"
+	"github.com/SamStalschus/secrets-api/internal"
 	"github.com/golang/mock/gomock"
 
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
@@ -29,7 +29,7 @@ func TestService_CreateUser(t *testing.T) {
 		name       string
 		prepare    func(t structure)
 		ctx        context.Context
-		user       *domain.User
+		user       *internal.User
 		wantApiErr *apierr.Message
 	}
 
@@ -43,7 +43,7 @@ func TestService_CreateUser(t *testing.T) {
 				logger.EXPECT().Info(gomock.Any(), gomock.Any(), gomock.Any())
 			},
 			ctx: context.Background(),
-			user: &domain.User{
+			user: &internal.User{
 				Email:    "zeze@email.com",
 				Password: "123456789",
 				Name:     "Zeze",
@@ -57,7 +57,7 @@ func TestService_CreateUser(t *testing.T) {
 				apiErr.EXPECT().BadRequest(tt.wantApiErr.ErrorMessage, gomock.Any()).Return(tt.wantApiErr)
 			},
 			ctx: context.Background(),
-			user: &domain.User{
+			user: &internal.User{
 				Email:    "zeze@email.com",
 				Password: "123456789",
 				Name:     "Zeze",
@@ -74,7 +74,7 @@ func TestService_CreateUser(t *testing.T) {
 				apiErr.EXPECT().InternalServerError(fmt.Errorf("")).Return(tt.wantApiErr)
 			},
 			ctx: context.Background(),
-			user: &domain.User{
+			user: &internal.User{
 				Email:    "zeze@email.com",
 				Password: "123456789",
 				Name:     "Zeze",
@@ -107,7 +107,7 @@ func TestService_GetUserByEmail(t *testing.T) {
 		prepare    func(t structure)
 		ctx        context.Context
 		userEmail  string
-		wantUser   *domain.User
+		wantUser   *internal.User
 		wantApiErr *apierr.Message
 	}
 
@@ -119,7 +119,7 @@ func TestService_GetUserByEmail(t *testing.T) {
 			},
 			ctx:       context.Background(),
 			userEmail: "zeze@email.com",
-			wantUser: &domain.User{
+			wantUser: &internal.User{
 				Email: "zeze@email.com",
 				Name:  "Zeze",
 			},
