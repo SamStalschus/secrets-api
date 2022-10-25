@@ -2,6 +2,8 @@ package log
 
 import "context"
 
+//go:generate mockgen -destination=./mocks.go -package=log -source=./contracts.go
+
 type Provider interface {
 	Debug(ctx context.Context, title string, valueMaps ...Body)
 	Info(ctx context.Context, title string, valueMaps ...Body)
