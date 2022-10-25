@@ -10,6 +10,8 @@ import (
 	"secrets-api/infra/mongodb/user_repo"
 )
 
+//go:generate mockgen -destination=./mocks.go -package=user -source=./user.go
+
 type Service struct {
 	logger     log.Provider
 	repository user_repo.IRepository
