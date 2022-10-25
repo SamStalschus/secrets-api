@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	"secrets-api/domain"
-	apierr "secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/domain"
+	apierr "github.com/SamStalschus/secrets-api/infra/errors"
 )
 
 //go:generate mockgen -destination=./mocks.go -package=user -source=./contracts.go

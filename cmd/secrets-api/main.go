@@ -3,17 +3,18 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"secrets-api/infra/bcrypt"
 
-	"secrets-api/cmd/secrets-api/user_ctrl"
-	"secrets-api/domain"
-	"secrets-api/domain/user"
-	"secrets-api/infra/env"
-	apierr "secrets-api/infra/errors"
-	"secrets-api/infra/log"
-	"secrets-api/infra/log/jsonlogs"
-	"secrets-api/infra/mongodb"
-	"secrets-api/infra/mongodb/user_repo"
+	"github.com/SamStalschus/secrets-api/infra/bcrypt"
+
+	"github.com/SamStalschus/secrets-api/cmd/secrets-api/user_ctrl"
+	"github.com/SamStalschus/secrets-api/domain"
+	"github.com/SamStalschus/secrets-api/domain/user"
+	"github.com/SamStalschus/secrets-api/infra/env"
+	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/infra/log/jsonlogs"
+	"github.com/SamStalschus/secrets-api/infra/mongodb"
+	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
 )
 
 var (

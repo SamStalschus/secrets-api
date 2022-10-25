@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"secrets-api/infra/maps"
+	"github.com/SamStalschus/secrets-api/infra/maps"
 )
 
 type logCtxKey struct{}

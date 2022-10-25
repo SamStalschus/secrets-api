@@ -6,10 +6,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"secrets-api/domain"
-	"secrets-api/domain/user"
-	apiErr "secrets-api/infra/errors"
-	"secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/domain"
+	"github.com/SamStalschus/secrets-api/domain/user"
+	apiErr "github.com/SamStalschus/secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/infra/log"
 )
 
 type Controller struct {

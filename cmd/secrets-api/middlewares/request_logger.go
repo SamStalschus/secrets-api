@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/infra/log"
 )
 
 func RequestLogger(h http.HandlerFunc, logger log.Provider) http.HandlerFunc {

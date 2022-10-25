@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/SamStalschus/secrets-api/infra/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"secrets-api/infra/log"
 )
 
 func GetConnection(logger log.Provider, uri string) (*mongo.Client, context.Context) {

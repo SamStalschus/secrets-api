@@ -6,9 +6,9 @@ package user
 
 import (
 	context "context"
+	domain "github.com/SamStalschus/secrets-api/domain"
+	errors "github.com/SamStalschus/secrets-api/infra/errors"
 	reflect "reflect"
-	domain "secrets-api/domain"
-	errors "secrets-api/infra/errors"
 
 	gomock "github.com/golang/mock/gomock"
 )

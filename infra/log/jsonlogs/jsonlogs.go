@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"secrets-api/infra/log"
-	"secrets-api/infra/maps"
+	"github.com/SamStalschus/secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/infra/maps"
 )
 
 // Client is the logger client, to instantiate it call `New()`

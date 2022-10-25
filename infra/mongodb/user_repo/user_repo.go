@@ -3,11 +3,11 @@ package user_repo
 import (
 	"context"
 
+	"github.com/SamStalschus/secrets-api/domain"
+	"github.com/SamStalschus/secrets-api/infra/mongodb"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"secrets-api/domain"
-	"secrets-api/infra/mongodb"
 )
 
 type Repository struct {

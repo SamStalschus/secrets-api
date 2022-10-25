@@ -3,19 +3,19 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/golang/mock/gomock"
 	"reflect"
-	"secrets-api/domain"
-	"secrets-api/infra/bcrypt"
 	"testing"
 
-	apierr "secrets-api/infra/errors"
-	"secrets-api/infra/log"
-	"secrets-api/infra/mongodb/user_repo"
+	"github.com/SamStalschus/secrets-api/domain"
+	"github.com/SamStalschus/secrets-api/infra/bcrypt"
+	"github.com/golang/mock/gomock"
+
+	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
 )
 
 func TestService_CreateUser(t *testing.T) {
-
 	mockCtrl := gomock.NewController(t)
 
 	logger := log.NewMockProvider(mockCtrl)

@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"secrets-api/domain"
-	"secrets-api/infra/log"
-	tt "secrets-api/infra/testtools"
+	"github.com/SamStalschus/secrets-api/domain"
+	"github.com/SamStalschus/secrets-api/infra/log"
+	tt "github.com/SamStalschus/secrets-api/infra/testtools"
 
 	"github.com/stretchr/testify/assert"
 )

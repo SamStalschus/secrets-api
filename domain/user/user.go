@@ -3,12 +3,13 @@ package user
 import (
 	"context"
 	"fmt"
-	"secrets-api/infra/bcrypt"
 
-	"secrets-api/domain"
-	"secrets-api/infra/errors"
-	"secrets-api/infra/log"
-	"secrets-api/infra/mongodb/user_repo"
+	"github.com/SamStalschus/secrets-api/infra/bcrypt"
+	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+
+	"github.com/SamStalschus/secrets-api/domain"
+	"github.com/SamStalschus/secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
 )
 
 type Service struct {

@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"secrets-api/cmd/secrets-api/middlewares"
-	"secrets-api/domain"
-	"secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/cmd/secrets-api/middlewares"
+	"github.com/SamStalschus/secrets-api/domain"
+	"github.com/SamStalschus/secrets-api/infra/log"
 )
 
 var routes []route
