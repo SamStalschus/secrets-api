@@ -2,63 +2,92 @@ package user
 
 import (
 	"context"
+	"fmt"
+	"github.com/golang/mock/gomock"
 	"reflect"
+	"secrets-api/domain"
+	"secrets-api/infra/bcrypt"
 	"testing"
 
-	"secrets-api/domain"
 	apierr "secrets-api/infra/errors"
 	"secrets-api/infra/log"
 	"secrets-api/infra/mongodb/user_repo"
 )
 
-func TestNewService(t *testing.T) {
-	type args struct {
-		logger     log.Provider
-		repository user_repo.IRepository
-		apiErr     apierr.Provider
-	}
-	tests := []struct {
-		name string
-		args args
-		want Service
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := NewService(tt.args.logger, tt.args.repository, tt.args.apiErr); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewService() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestService_CreateUser(t *testing.T) {
-	type fields struct {
-		logger     log.Provider
-		repository user_repo.IRepository
-		apiErr     apierr.Provider
-	}
-	type args struct {
-		ctx  context.Context
-		user *domain.User
-	}
-	tests := []struct {
+
+	mockCtrl := gomock.NewController(t)
+
+	logger := log.NewMockProvider(mockCtrl)
+	repository := user_repo.NewMockIRepository(mockCtrl)
+	apiErr := apierr.NewMockProvider(mockCtrl)
+	bcryptMck := bcrypt.NewMockProvider(mockCtrl)
+
+	service := NewService(logger, repository, apiErr, bcryptMck)
+
+	type structure struct {
 		name       string
-		fields     fields
-		args       args
+		prepare    func(t structure)
+		ctx        context.Context
+		user       *domain.User
 		wantApiErr *apierr.Message
-	}{
-		// TODO: Add test cases.
 	}
-	for _, tt := range tests {
+
+	testCases := []structure{
+		{
+			name: "Create user with success",
+			prepare: func(tt structure) {
+				repository.EXPECT().FindUserByEmail(tt.ctx, tt.user.Email).Return(nil, nil)
+				bcryptMck.EXPECT().EncryptPassword(tt.user.Password).Return([]byte("$2a$10$isZtzwTnub0jp1HgZi/4xO9RpGaWsx4GUcpVEA1DycepyoqiV0sH."), nil)
+				repository.EXPECT().CreateUser(tt.ctx, gomock.Any()).Return("6355fd6995b4c8d74085a286", nil)
+				logger.EXPECT().Info(gomock.Any(), gomock.Any(), gomock.Any())
+			},
+			ctx: context.Background(),
+			user: &domain.User{
+				Email:    "zeze@email.com",
+				Password: "123456789",
+				Name:     "Zeze",
+			},
+			wantApiErr: nil,
+		},
+		{
+			name: "Error because user already exists",
+			prepare: func(tt structure) {
+				repository.EXPECT().FindUserByEmail(tt.ctx, tt.user.Email).Return(tt.user, nil)
+				apiErr.EXPECT().BadRequest(tt.wantApiErr.ErrorMessage, gomock.Any()).Return(tt.wantApiErr)
+			},
+			ctx: context.Background(),
+			user: &domain.User{
+				Email:    "zeze@email.com",
+				Password: "123456789",
+				Name:     "Zeze",
+			},
+			wantApiErr: &apierr.Message{
+				ErrorMessage: "User already exists",
+			},
+		},
+		{
+			name: "Error because error in encrypt password",
+			prepare: func(tt structure) {
+				repository.EXPECT().FindUserByEmail(tt.ctx, tt.user.Email).Return(nil, nil)
+				bcryptMck.EXPECT().EncryptPassword(tt.user.Password).Return(nil, fmt.Errorf(""))
+				apiErr.EXPECT().InternalServerError(fmt.Errorf("")).Return(tt.wantApiErr)
+			},
+			ctx: context.Background(),
+			user: &domain.User{
+				Email:    "zeze@email.com",
+				Password: "123456789",
+				Name:     "Zeze",
+			},
+			wantApiErr: &apierr.Message{
+				ErrorMessage: "Internal Server Error",
+			},
+		},
+	}
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			s := Service{
-				logger:     tt.fields.logger,
-				repository: tt.fields.repository,
-				apiErr:     tt.fields.apiErr,
-			}
-			if gotApiErr := s.CreateUser(tt.args.ctx, tt.args.user); !reflect.DeepEqual(gotApiErr, tt.wantApiErr) {
+			tt.prepare(tt)
+			if gotApiErr := service.CreateUser(tt.ctx, tt.user); !reflect.DeepEqual(gotApiErr, tt.wantApiErr) {
 				t.Errorf("CreateUser() = %v, want %v", gotApiErr, tt.wantApiErr)
 			}
 		})
@@ -66,32 +95,55 @@ func TestService_CreateUser(t *testing.T) {
 }
 
 func TestService_GetUserByEmail(t *testing.T) {
-	type fields struct {
-		logger     log.Provider
-		repository user_repo.IRepository
-		apiErr     apierr.Provider
-	}
-	type args struct {
-		ctx       context.Context
-		userEmail string
-	}
-	tests := []struct {
+	mockCtrl := gomock.NewController(t)
+
+	repository := user_repo.NewMockIRepository(mockCtrl)
+	apiErr := apierr.NewMockProvider(mockCtrl)
+
+	service := NewService(nil, repository, apiErr, nil)
+
+	type structure struct {
 		name       string
-		fields     fields
-		args       args
+		prepare    func(t structure)
+		ctx        context.Context
+		userEmail  string
 		wantUser   *domain.User
 		wantApiErr *apierr.Message
-	}{
-		// TODO: Add test cases.
 	}
-	for _, tt := range tests {
+
+	testCases := []structure{
+		{
+			name: "User getted with success",
+			prepare: func(tt structure) {
+				repository.EXPECT().FindUserByEmail(tt.ctx, tt.userEmail).Return(tt.wantUser, nil)
+			},
+			ctx:       context.Background(),
+			userEmail: "zeze@email.com",
+			wantUser: &domain.User{
+				Email: "zeze@email.com",
+				Name:  "Zeze",
+			},
+			wantApiErr: nil,
+		},
+		{
+			name: "Error because user don't exists",
+			prepare: func(tt structure) {
+				repository.EXPECT().FindUserByEmail(tt.ctx, tt.userEmail).Return(tt.wantUser, nil)
+				apiErr.EXPECT().BadRequest(tt.wantApiErr.ErrorMessage, gomock.Any()).Return(tt.wantApiErr)
+			},
+			ctx:       context.Background(),
+			userEmail: "zeze@email.com",
+			wantUser:  nil,
+			wantApiErr: &apierr.Message{
+				ErrorMessage: "User don't exists",
+			},
+		},
+	}
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			s := Service{
-				logger:     tt.fields.logger,
-				repository: tt.fields.repository,
-				apiErr:     tt.fields.apiErr,
-			}
-			gotUser, gotApiErr := s.GetUserByEmail(tt.args.ctx, tt.args.userEmail)
+			tt.prepare(tt)
+
+			gotUser, gotApiErr := service.GetUserByEmail(tt.ctx, tt.userEmail)
 			if !reflect.DeepEqual(gotUser, tt.wantUser) {
 				t.Errorf("GetUserByEmail() gotUser = %v, want %v", gotUser, tt.wantUser)
 			}

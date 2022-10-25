@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"secrets-api/infra/bcrypt"
 
 	"secrets-api/cmd/secrets-api/user_ctrl"
 	"secrets-api/domain"
@@ -28,6 +29,7 @@ func main() {
 
 	logger = jsonlogs.New(logLevel, domain.GetCtxValues)
 	apiErrors := apierr.New()
+	bcryptClient := bcrypt.NewClient()
 
 	db, ctx := mongodb.GetConnection(logger, databaseURI)
 	defer db.Disconnect(ctx)
@@ -35,7 +37,7 @@ func main() {
 	mongoRepository := mongodb.NewRepository(db)
 
 	userRepository := user_repo.NewRepository(&mongoRepository)
-	userService := user.NewService(logger, &userRepository, apiErrors)
+	userService := user.NewService(logger, &userRepository, apiErrors, bcryptClient)
 	userController = user_ctrl.NewController(userService, logger, apiErrors)
 
 	logger.Info(ctx, fmt.Sprintf("Listening on port %s", port), log.Body{})

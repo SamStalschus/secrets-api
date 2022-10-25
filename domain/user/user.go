@@ -3,31 +3,32 @@ package user
 import (
 	"context"
 	"fmt"
+	"secrets-api/infra/bcrypt"
 
-	"golang.org/x/crypto/bcrypt"
 	"secrets-api/domain"
 	"secrets-api/infra/errors"
 	"secrets-api/infra/log"
 	"secrets-api/infra/mongodb/user_repo"
 )
 
-//go:generate mockgen -destination=./mocks.go -package=user -source=./contracts.go
-
 type Service struct {
 	logger     log.Provider
 	repository user_repo.IRepository
 	apiErr     apierr.Provider
+	bcrypt     bcrypt.Provider
 }
 
 func NewService(
 	logger log.Provider,
 	repository user_repo.IRepository,
 	apiErr apierr.Provider,
+	bcrypt bcrypt.Provider,
 ) Service {
 	return Service{
 		logger:     logger,
 		repository: repository,
 		apiErr:     apiErr,
+		bcrypt:     bcrypt,
 	}
 }
 
@@ -35,10 +36,10 @@ func (s Service) CreateUser(ctx context.Context, user *domain.User) (apiErr *api
 	userAlreadyExists, _ := s.repository.FindUserByEmail(ctx, user.Email)
 
 	if userAlreadyExists != nil {
-		apiErr = s.apiErr.BadRequest("User already exists", fmt.Errorf(""))
+		return s.apiErr.BadRequest("User already exists", fmt.Errorf(""))
 	}
 
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	passwordHash, err := s.bcrypt.EncryptPassword(user.Password)
 	if err != nil {
 		return s.apiErr.InternalServerError(err)
 	}
@@ -47,7 +48,7 @@ func (s Service) CreateUser(ctx context.Context, user *domain.User) (apiErr *api
 
 	id, err := s.repository.CreateUser(ctx, user)
 	if err != nil {
-		apiErr = s.apiErr.BadRequest("Error in register process", err)
+		return s.apiErr.BadRequest("Error in register process", err)
 	}
 
 	s.logger.Info(ctx, fmt.Sprintf("User created: %s", id), log.Body{})
