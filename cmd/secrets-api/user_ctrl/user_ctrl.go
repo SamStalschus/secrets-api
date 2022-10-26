@@ -73,10 +73,10 @@ func (c Controller) SignUp(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (c Controller) GetUserByEmail(w http.ResponseWriter, r *http.Request) {
-	email := internal.GetFields(r, "CtxKey", 0)
+func (c Controller) GetUser(w http.ResponseWriter, r *http.Request) {
+	userID := internal.GetField(r.Context(), "user_id")
 
-	user, errResponse := c.usersService.GetUserByEmail(r.Context(), email)
+	user, errResponse := c.usersService.GetUser(r.Context(), userID)
 	if errResponse != nil {
 		response, _ := json.Marshal(errResponse)
 		w.Header().Set("Content-Type", "application/json")

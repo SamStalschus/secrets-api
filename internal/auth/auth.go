@@ -1,0 +1,53 @@
+package auth
+
+import (
+	"context"
+	"fmt"
+	"github.com/SamStalschus/secrets-api/infra/auth"
+	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
+	"github.com/SamStalschus/secrets-api/internal"
+)
+
+type Service struct {
+	apiErr     apierr.Provider
+	auth       auth.Provider
+	logger     log.Provider
+	repository user_repo.IRepository
+}
+
+func NewService(
+	apiErr apierr.Provider,
+	auth auth.Provider,
+	logger log.Provider,
+	repository user_repo.IRepository,
+) Service {
+	return Service{
+		apiErr:     apiErr,
+		auth:       auth,
+		logger:     logger,
+		repository: repository,
+	}
+}
+
+func (s Service) GenToken(ctx context.Context, authUser *internal.AuthUser, ip string) (*internal.Token, *apierr.Message) {
+	user, err := s.repository.FindWithPasswordByEmail(ctx, authUser.Email)
+	if err != nil {
+		return nil, s.apiErr.BadRequest("Email or password incorrect.", fmt.Errorf("error in find password"))
+	}
+
+	err = s.auth.CheckPassword(user.Password, authUser.Password)
+	if err != nil {
+		return nil, s.apiErr.BadRequest("Email or password incorrect.", fmt.Errorf("error in check password"))
+	}
+
+	newJwt, err := s.auth.NewJwt(user.Id.Hex())
+	if err != nil {
+		return nil, s.apiErr.InternalServerError(fmt.Errorf("error in generate jwt process"))
+	}
+
+	s.logger.Info(ctx, fmt.Sprintf("Token generated for user %s and IP %s", user.Id.Hex(), ip), log.Body{})
+
+	return &internal.Token{Token: newJwt, Email: user.Email}, nil
+}

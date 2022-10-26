@@ -33,9 +33,22 @@ func (r Repository) FindUserByEmail(ctx context.Context, email string) (user *in
 	projection := options.FindOne().SetProjection(bson.M{"password": 0})
 
 	err = r.repository.FindOne(ctx, collection, bson.M{"email": email}, projection).Decode(&user)
-	if err != nil {
-		return user, err
-	}
+
+	return user, err
+}
+
+func (r Repository) FindWithPasswordByEmail(ctx context.Context, email string) (user *internal.User, err error) {
+	err = r.repository.FindOne(ctx, collection, bson.M{"email": email}, nil).Decode(&user)
+
+	return user, err
+}
+
+func (r Repository) FindUserByID(ctx context.Context, id string) (user *internal.User, err error) {
+	projection := options.FindOne().SetProjection(bson.M{"password": 0})
+
+	objectID, _ := primitive.ObjectIDFromHex(id)
+
+	err = r.repository.FindOne(ctx, collection, bson.M{"_id": objectID}, projection).Decode(&user)
 
 	return user, err
 }

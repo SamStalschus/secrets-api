@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/SamStalschus/secrets-api/infra/bcrypt"
+	"github.com/SamStalschus/secrets-api/infra/auth"
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
 
 	"github.com/SamStalschus/secrets-api/infra/log"
@@ -16,20 +16,20 @@ type Service struct {
 	logger     log.Provider
 	repository user_repo.IRepository
 	apiErr     apierr.Provider
-	bcrypt     bcrypt.Provider
+	auth       auth.Provider
 }
 
 func NewService(
 	logger log.Provider,
 	repository user_repo.IRepository,
 	apiErr apierr.Provider,
-	bcrypt bcrypt.Provider,
+	auth auth.Provider,
 ) Service {
 	return Service{
 		logger:     logger,
 		repository: repository,
 		apiErr:     apiErr,
-		bcrypt:     bcrypt,
+		auth:       auth,
 	}
 }
 
@@ -40,7 +40,7 @@ func (s Service) CreateUser(ctx context.Context, user *internal.User) (apiErr *a
 		return s.apiErr.BadRequest("User already exists", fmt.Errorf(""))
 	}
 
-	passwordHash, err := s.bcrypt.EncryptPassword(user.Password)
+	passwordHash, err := s.auth.EncryptPassword(user.Password)
 	if err != nil {
 		return s.apiErr.InternalServerError(err)
 	}
@@ -57,8 +57,8 @@ func (s Service) CreateUser(ctx context.Context, user *internal.User) (apiErr *a
 	return apiErr
 }
 
-func (s Service) GetUserByEmail(ctx context.Context, userEmail string) (user *internal.User, apiErr *apierr.Message) {
-	user, _ = s.repository.FindUserByEmail(ctx, userEmail)
+func (s Service) GetUser(ctx context.Context, userID string) (user *internal.User, apiErr *apierr.Message) {
+	user, _ = s.repository.FindUserByID(ctx, userID)
 
 	if user == nil {
 		apiErr = s.apiErr.BadRequest("User don't exists", fmt.Errorf(""))

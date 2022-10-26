@@ -41,3 +41,13 @@ func (c Client) InternalServerError(err error) *Message {
 		Error:        err,
 	}
 }
+
+// Unauthorized return unauthorized error error default
+func (c Client) Unauthorized(message string) *Message {
+	return &Message{
+		ErrorMessage: message,
+		ErrorCode:    http.StatusText(http.StatusUnauthorized),
+		ErrorStatus:  http.StatusUnauthorized,
+		Error:        nil,
+	}
+}

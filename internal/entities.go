@@ -8,10 +8,22 @@ import (
 
 // User of account
 type User struct {
-	ID        primitive.ObjectID `json:"id,omitempty"`
-	Name      string             `json:"name,omitempty"`
-	Email     string             `json:"email,omitempty"`
-	Password  string             `json:"password,omitempty"`
-	CreatedAt time.Time          `json:"created_at,omitempty"`
-	UpdatedAt time.Time          `json:"updated_at,omitempty"`
+	Id        primitive.ObjectID `json:"_id,omitempty" bson:"_id"`
+	Name      string             `json:"name,omitempty" bson:"name"`
+	Email     string             `json:"email,omitempty" bson:"email"`
+	Password  string             `json:"password,omitempty" bson:"password"`
+	CreatedAt time.Time          `json:"created_at,omitempty" bson:"createdAt"`
+	UpdatedAt time.Time          `json:"updated_at,omitempty" bson:"updatedAt"`
+}
+
+// AuthUser represent data of user authenticate
+type AuthUser struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// Token represent data token to return
+type Token struct {
+	Token string `json:"token"`
+	Email string `json:"email"`
 }

@@ -11,5 +11,5 @@ import (
 
 type IService interface {
 	CreateUser(ctx context.Context, user *internal.User) (apiErr *apierr.Message)
-	GetUserByEmail(ctx context.Context, userEmail string) (user *internal.User, apiErr *apierr.Message)
+	GetUser(ctx context.Context, userID string) (user *internal.User, apiErr *apierr.Message)
 }

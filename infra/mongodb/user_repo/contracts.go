@@ -11,4 +11,6 @@ import (
 type IRepository interface {
 	CreateUser(ctx context.Context, user *internal.User) (string, error)
 	FindUserByEmail(ctx context.Context, email string) (user *internal.User, err error)
+	FindWithPasswordByEmail(ctx context.Context, email string) (user *internal.User, err error)
+	FindUserByID(ctx context.Context, id string) (user *internal.User, err error)
 }
