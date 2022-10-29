@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/SamStalschus/secrets-api/cmd/secrets-api/auth_ctrl"
+	"github.com/SamStalschus/secrets-api/cmd/secrets-api/secret_ctrl"
 	authService "github.com/SamStalschus/secrets-api/internal/auth"
+	"github.com/SamStalschus/secrets-api/internal/secret"
 	"net/http"
 
 	"github.com/SamStalschus/secrets-api/infra/auth"
@@ -20,11 +22,12 @@ import (
 )
 
 var (
-	userController *user_ctrl.Controller
-	authController *auth_ctrl.Controller
-	logger         log.Provider
-	apiErrors      apierr.Provider
-	authProvider   auth.Provider
+	userController   *user_ctrl.Controller
+	authController   *auth_ctrl.Controller
+	secretController *secret_ctrl.Controller
+	logger           log.Provider
+	apiErrors        apierr.Provider
+	authProvider     auth.Provider
 )
 
 func main() {
@@ -48,6 +51,9 @@ func main() {
 
 	authService := authService.NewService(apiErrors, authProvider, logger, &userRepository)
 	authController = auth_ctrl.NewController(authService, logger, apiErrors)
+
+	secretService := secret.NewService(logger, userRepository, apiErrors, authProvider)
+	secretController = secret_ctrl.NewController(secretService, logger, apiErrors)
 
 	logger.Info(ctx, fmt.Sprintf("Listening on port %s", port), log.Body{})
 	if err := run(port); err != nil {

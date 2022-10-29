@@ -28,3 +28,7 @@ func (r Repository) InsertOne(ctx context.Context, collection string, data any) 
 func (r Repository) FindOne(ctx context.Context, collection string, data any, opts *options.FindOneOptions) *mongo.SingleResult {
 	return r.client.Database(database).Collection(collection).FindOne(ctx, data, opts)
 }
+
+func (r Repository) UpdateOne(ctx context.Context, collection string, filter any, data any) (*mongo.UpdateResult, error) {
+	return r.client.Database(database).Collection(collection).UpdateOne(ctx, filter, data)
+}

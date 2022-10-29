@@ -30,7 +30,7 @@ func (r Repository) CreateUser(ctx context.Context, user *internal.User) (string
 }
 
 func (r Repository) FindUserByEmail(ctx context.Context, email string) (user *internal.User, err error) {
-	projection := options.FindOne().SetProjection(bson.M{"password": 0})
+	projection := options.FindOne().SetProjection(bson.M{"password": 0, "secrets": 0})
 
 	err = r.repository.FindOne(ctx, collection, bson.M{"email": email}, projection).Decode(&user)
 
@@ -38,7 +38,8 @@ func (r Repository) FindUserByEmail(ctx context.Context, email string) (user *in
 }
 
 func (r Repository) FindWithPasswordByEmail(ctx context.Context, email string) (user *internal.User, err error) {
-	err = r.repository.FindOne(ctx, collection, bson.M{"email": email}, nil).Decode(&user)
+	projection := options.FindOne().SetProjection(bson.M{"secrets": 0})
+	err = r.repository.FindOne(ctx, collection, bson.M{"email": email}, projection).Decode(&user)
 
 	return user, err
 }
@@ -51,4 +52,10 @@ func (r Repository) FindUserByID(ctx context.Context, id string) (user *internal
 	err = r.repository.FindOne(ctx, collection, bson.M{"_id": objectID}, projection).Decode(&user)
 
 	return user, err
+}
+
+func (r Repository) UpdateUserByID(ctx context.Context, id string, user *internal.User) (err error) {
+	update := bson.D{{"$set", bson.D{{"secrets.$", user.Secrets[0]}}}}
+	_, err = r.repository.UpdateOne(ctx, collection, bson.M{"_id": id}, update)
+	return err
 }

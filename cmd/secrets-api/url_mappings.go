@@ -15,7 +15,8 @@ var routes []route
 func initializeRoutes() {
 	routes = []route{
 		newRoute("POST", "/users",
-			middlewares.HandleRequestID(middlewares.RequestLogger(userController.SignUp, logger))),
+			middlewares.HandleRequestID(
+				middlewares.RequestLogger(userController.SignUp, logger))),
 
 		newRoute("GET", "/users",
 			middlewares.HandleRequestID(
@@ -24,11 +25,27 @@ func initializeRoutes() {
 						userController.GetUser, authProvider, logger), logger))),
 
 		newRoute("POST", "/token",
-			middlewares.HandleRequestID(middlewares.RequestLogger(authController.Authenticate, logger))),
-		//newRoute("PUT", "/users", updateUser),
-		//newRoute("GET", "/users/secrets/([^/]+)", getUserSecrets),
-		//newRoute("POST", "/secrets", createSecret),
-		//newRoute("GET", "/secret/([^/]+)", getSecret),
+			middlewares.HandleRequestID(
+				middlewares.RequestLogger(authController.Authenticate, logger))),
+
+		newRoute("POST", "/secrets",
+			middlewares.HandleRequestID(
+				middlewares.RequestLogger(
+					middlewares.EnsureAuth(
+						secretController.CreateSecret, authProvider, logger), logger))),
+
+		newRoute("GET", "/secrets",
+			middlewares.HandleRequestID(
+				middlewares.RequestLogger(
+					middlewares.EnsureAuth(
+						userController.GetUser, authProvider, logger), logger))),
+
+		newRoute("GET", "/secrets/([^/]+)",
+			middlewares.HandleRequestID(
+				middlewares.RequestLogger(
+					middlewares.EnsureAuth(
+						userController.GetUser, authProvider, logger), logger))),
+
 		//newRoute("PUT", "/secret/([0-9]+)", updateSecret),
 	}
 }

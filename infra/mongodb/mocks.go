@@ -64,3 +64,18 @@ func (mr *MockIRepositoryMockRecorder) InsertOne(ctx, collection, data interface
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertOne", reflect.TypeOf((*MockIRepository)(nil).InsertOne), ctx, collection, data)
 }
+
+// UpdateOne mocks base method.
+func (m *MockIRepository) UpdateOne(ctx context.Context, collection string, filter, data any) (*mongo.UpdateResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateOne", ctx, collection, filter, data)
+	ret0, _ := ret[0].(*mongo.UpdateResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateOne indicates an expected call of UpdateOne.
+func (mr *MockIRepositoryMockRecorder) UpdateOne(ctx, collection, filter, data interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOne", reflect.TypeOf((*MockIRepository)(nil).UpdateOne), ctx, collection, filter, data)
+}

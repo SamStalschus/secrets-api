@@ -12,4 +12,5 @@ import (
 type IRepository interface {
 	InsertOne(ctx context.Context, collection string, data any) (*mongo.InsertOneResult, error)
 	FindOne(ctx context.Context, collection string, data any, opts *options.FindOneOptions) *mongo.SingleResult
+	UpdateOne(ctx context.Context, collection string, filter any, data any) (*mongo.UpdateResult, error)
 }
