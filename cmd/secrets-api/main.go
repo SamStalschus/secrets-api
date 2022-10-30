@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/SamStalschus/secrets-api/cmd/secrets-api/auth_ctrl"
 	"github.com/SamStalschus/secrets-api/cmd/secrets-api/secret_ctrl"
+	"github.com/SamStalschus/secrets-api/infra/mongodb/secret_repo"
 	authService "github.com/SamStalschus/secrets-api/internal/auth"
 	"github.com/SamStalschus/secrets-api/internal/secret"
 	"net/http"
@@ -52,7 +53,8 @@ func main() {
 	authService := authService.NewService(apiErrors, authProvider, logger, &userRepository)
 	authController = auth_ctrl.NewController(authService, logger, apiErrors)
 
-	secretService := secret.NewService(logger, userRepository, apiErrors, authProvider)
+	secretRepository := secret_repo.NewRepository(&mongoRepository)
+	secretService := secret.NewService(logger, secretRepository, apiErrors, authProvider)
 	secretController = secret_ctrl.NewController(secretService, logger, apiErrors)
 
 	logger.Info(ctx, fmt.Sprintf("Listening on port %s", port), log.Body{})
