@@ -19,7 +19,7 @@ type User struct {
 // Secret of user
 type Secret struct {
 	Id        primitive.ObjectID `json:"_id,omitempty" bson:"_id"`
-	Name      string             `json:"name,omitempty" bson:"name"`
+	Key       string             `json:"key,omitempty" bson:"key"`
 	Value     string             `json:"value,omitempty" bson:"value"`
 	UserID    primitive.ObjectID `json:"user_id,omitempty" bson:"user_id"`
 	CreatedAt time.Time          `json:"created_at,omitempty" bson:"createdAt"`

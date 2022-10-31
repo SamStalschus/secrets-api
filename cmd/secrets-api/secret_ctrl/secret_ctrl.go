@@ -75,7 +75,7 @@ func (c Controller) CreateSecret(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c Controller) validateBody(secret *internal.Secret) (apiErr *apiErr.Message) {
-	if secret.Value == "" || secret.Name == "" {
+	if secret.Value == "" || secret.Key == "" {
 		apiErr = c.apiErr.BadRequest("Missing params", fmt.Errorf(""))
 	}
 	return apiErr

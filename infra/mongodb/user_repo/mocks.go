@@ -10,6 +10,7 @@ import (
 
 	internal "github.com/SamStalschus/secrets-api/internal"
 	gomock "github.com/golang/mock/gomock"
+	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // MockIRepository is a mock of IRepository interface.
@@ -93,4 +94,18 @@ func (m *MockIRepository) FindWithPasswordByEmail(ctx context.Context, email str
 func (mr *MockIRepositoryMockRecorder) FindWithPasswordByEmail(ctx, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindWithPasswordByEmail", reflect.TypeOf((*MockIRepository)(nil).FindWithPasswordByEmail), ctx, email)
+}
+
+// GenerateID mocks base method.
+func (m *MockIRepository) GenerateID() primitive.ObjectID {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GenerateID")
+	ret0, _ := ret[0].(primitive.ObjectID)
+	return ret0
+}
+
+// GenerateID indicates an expected call of GenerateID.
+func (mr *MockIRepositoryMockRecorder) GenerateID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateID", reflect.TypeOf((*MockIRepository)(nil).GenerateID))
 }

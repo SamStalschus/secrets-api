@@ -22,8 +22,11 @@ func NewRepository(
 const collection = "secrets"
 
 func (r Repository) CreateSecret(ctx context.Context, secret *internal.Secret, userID string) error {
-	secret.Id = primitive.NewObjectID()
 	secret.UserID, _ = primitive.ObjectIDFromHex(userID)
 	_, err := r.repository.InsertOne(ctx, collection, secret)
 	return err
+}
+
+func (r Repository) GenerateID() primitive.ObjectID {
+	return primitive.NewObjectID()
 }

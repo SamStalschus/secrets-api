@@ -3,8 +3,8 @@ package secret
 import (
 	"context"
 	"fmt"
-	"github.com/SamStalschus/secrets-api/infra/auth"
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/infra/hash"
 	"github.com/SamStalschus/secrets-api/infra/log"
 	"github.com/SamStalschus/secrets-api/infra/mongodb/secret_repo"
 	"github.com/SamStalschus/secrets-api/internal"
@@ -14,14 +14,14 @@ type Service struct {
 	logger     log.Provider
 	repository secret_repo.IRepository
 	apiErr     apierr.Provider
-	auth       auth.Provider
+	auth       hash.Provider
 }
 
 func NewService(
 	logger log.Provider,
 	repository secret_repo.IRepository,
 	apiErr apierr.Provider,
-	auth auth.Provider,
+	auth hash.Provider,
 ) Service {
 	return Service{
 		logger:     logger,
@@ -32,7 +32,23 @@ func NewService(
 }
 
 func (s Service) CreateSecret(ctx context.Context, secret *internal.Secret, userID string) (apiErr *apierr.Message) {
-	err := s.repository.CreateSecret(ctx, secret, userID)
+	secret.Id = s.repository.GenerateID()
+	keyHash, err := s.auth.Encrypt(secret.Key, secret.Id.Hex())
+	if err != nil {
+		s.logger.Info(ctx, fmt.Sprintf("Error to cipher secret key %s", userID), log.Body{})
+		return s.apiErr.BadRequest("Error to create secret", err)
+	}
+
+	valueHash, err := s.auth.Encrypt(secret.Value, secret.Id.Hex())
+	if err != nil {
+		s.logger.Info(ctx, fmt.Sprintf("Error to cipher secret value %s", userID), log.Body{})
+		return s.apiErr.BadRequest("Error to create secret", err)
+	}
+
+	secret.Key = string(keyHash)
+	secret.Value = string(valueHash)
+
+	err = s.repository.CreateSecret(ctx, secret, userID)
 	if err != nil {
 		s.logger.Info(ctx, fmt.Sprintf("Error to create one secret by user %s", userID), log.Body{})
 		return s.apiErr.BadRequest("Error to create secret", err)

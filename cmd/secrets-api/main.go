@@ -9,7 +9,7 @@ import (
 	"github.com/SamStalschus/secrets-api/internal/secret"
 	"net/http"
 
-	"github.com/SamStalschus/secrets-api/infra/auth"
+	"github.com/SamStalschus/secrets-api/infra/hash"
 
 	"github.com/SamStalschus/secrets-api/cmd/secrets-api/user_ctrl"
 	"github.com/SamStalschus/secrets-api/infra/env"
@@ -28,7 +28,7 @@ var (
 	secretController *secret_ctrl.Controller
 	logger           log.Provider
 	apiErrors        apierr.Provider
-	authProvider     auth.Provider
+	authProvider     hash.Provider
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 
 	logger = jsonlogs.New(logLevel, internal.GetCtxValues)
 	apiErrors = apierr.New()
-	authProvider = auth.NewClient(secretKey)
+	authProvider = hash.NewClient(secretKey)
 
 	db, ctx := mongodb.GetConnection(logger, databaseURI)
 	defer db.Disconnect(ctx)

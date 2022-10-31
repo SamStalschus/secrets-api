@@ -25,7 +25,6 @@ func NewRepository(
 const collection = "users"
 
 func (r Repository) CreateUser(ctx context.Context, user *internal.User) (string, error) {
-	user.Id = primitive.NewObjectID()
 	res, err := r.repository.InsertOne(ctx, collection, user)
 	return res.InsertedID.(primitive.ObjectID).Hex(), err
 }
@@ -53,4 +52,8 @@ func (r Repository) FindUserByID(ctx context.Context, id string) (user *internal
 	err = r.repository.FindOne(ctx, collection, bson.M{"_id": objectID}, projection).Decode(&user)
 
 	return user, err
+}
+
+func (r Repository) GenerateID() primitive.ObjectID {
+	return primitive.NewObjectID()
 }

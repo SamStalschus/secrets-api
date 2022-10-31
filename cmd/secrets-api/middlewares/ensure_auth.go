@@ -2,13 +2,13 @@ package middlewares
 
 import (
 	"fmt"
-	"github.com/SamStalschus/secrets-api/infra/auth"
+	"github.com/SamStalschus/secrets-api/infra/hash"
 	"github.com/SamStalschus/secrets-api/infra/log"
 	"github.com/SamStalschus/secrets-api/internal"
 	"net/http"
 )
 
-func EnsureAuth(h http.HandlerFunc, auth auth.Provider, logger log.Provider) http.HandlerFunc {
+func EnsureAuth(h http.HandlerFunc, auth hash.Provider, logger log.Provider) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 
@@ -26,7 +26,7 @@ func EnsureAuth(h http.HandlerFunc, auth auth.Provider, logger log.Provider) htt
 
 			h.ServeHTTP(w, r.WithContext(ctx))
 		} else {
-			logger.Info(r.Context(), fmt.Sprintf("Error in auth of user %s Error %v", userID, err), log.Body{})
+			logger.Info(r.Context(), fmt.Sprintf("Error in hash of user %s Error %v", userID, err), log.Body{})
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

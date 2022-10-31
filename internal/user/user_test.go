@@ -3,10 +3,11 @@ package user
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"reflect"
 	"testing"
 
-	"github.com/SamStalschus/secrets-api/infra/auth"
+	"github.com/SamStalschus/secrets-api/infra/hash"
 	"github.com/SamStalschus/secrets-api/internal"
 	"github.com/golang/mock/gomock"
 
@@ -21,7 +22,7 @@ func TestService_CreateUser(t *testing.T) {
 	logger := log.NewMockProvider(mockCtrl)
 	repository := user_repo.NewMockIRepository(mockCtrl)
 	apiErr := apierr.NewMockProvider(mockCtrl)
-	auth := auth.NewMockProvider(mockCtrl)
+	auth := hash.NewMockProvider(mockCtrl)
 
 	service := NewService(logger, repository, apiErr, auth)
 
@@ -37,8 +38,10 @@ func TestService_CreateUser(t *testing.T) {
 		{
 			name: "Create user with success",
 			prepare: func(tt structure) {
+				hex, _ := primitive.ObjectIDFromHex("6355fd6995b4c8d74085a286")
+				repository.EXPECT().GenerateID().Return(hex)
 				repository.EXPECT().FindUserByEmail(tt.ctx, tt.user.Email).Return(nil, nil)
-				auth.EXPECT().EncryptPassword(tt.user.Password).Return([]byte("$2a$10$isZtzwTnub0jp1HgZi/4xO9RpGaWsx4GUcpVEA1DycepyoqiV0sH."), nil)
+				auth.EXPECT().Encrypt(tt.user.Password, gomock.Any()).Return([]byte("$2a$10$isZtzwTnub0jp1HgZi/4xO9RpGaWsx4GUcpVEA1DycepyoqiV0sH."), nil)
 				repository.EXPECT().CreateUser(tt.ctx, gomock.Any()).Return("6355fd6995b4c8d74085a286", nil)
 				logger.EXPECT().Info(gomock.Any(), gomock.Any(), gomock.Any())
 			},
@@ -69,8 +72,10 @@ func TestService_CreateUser(t *testing.T) {
 		{
 			name: "Error because error in encrypt password",
 			prepare: func(tt structure) {
+				hex, _ := primitive.ObjectIDFromHex("6355fd6995b4c8d74085a286")
+				repository.EXPECT().GenerateID().Return(hex)
 				repository.EXPECT().FindUserByEmail(tt.ctx, tt.user.Email).Return(nil, nil)
-				auth.EXPECT().EncryptPassword(tt.user.Password).Return(nil, fmt.Errorf(""))
+				auth.EXPECT().Encrypt(tt.user.Password, gomock.Any()).Return(nil, fmt.Errorf(""))
 				apiErr.EXPECT().InternalServerError(fmt.Errorf("")).Return(tt.wantApiErr)
 			},
 			ctx: context.Background(),

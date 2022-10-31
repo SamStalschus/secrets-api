@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/SamStalschus/secrets-api/infra/auth"
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/infra/hash"
 
 	"github.com/SamStalschus/secrets-api/infra/log"
 	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
@@ -16,14 +16,14 @@ type Service struct {
 	logger     log.Provider
 	repository user_repo.IRepository
 	apiErr     apierr.Provider
-	auth       auth.Provider
+	auth       hash.Provider
 }
 
 func NewService(
 	logger log.Provider,
 	repository user_repo.IRepository,
 	apiErr apierr.Provider,
-	auth auth.Provider,
+	auth hash.Provider,
 ) Service {
 	return Service{
 		logger:     logger,
@@ -35,12 +35,13 @@ func NewService(
 
 func (s Service) CreateUser(ctx context.Context, user *internal.User) (apiErr *apierr.Message) {
 	userAlreadyExists, _ := s.repository.FindUserByEmail(ctx, user.Email)
-
 	if userAlreadyExists != nil {
 		return s.apiErr.BadRequest("User already exists", fmt.Errorf(""))
 	}
 
-	passwordHash, err := s.auth.EncryptPassword(user.Password)
+	user.Id = s.repository.GenerateID()
+
+	passwordHash, err := s.auth.Encrypt(user.Password, user.Id.Hex())
 	if err != nil {
 		return s.apiErr.InternalServerError(err)
 	}
