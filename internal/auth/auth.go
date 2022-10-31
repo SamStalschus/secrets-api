@@ -3,8 +3,8 @@ package auth
 import (
 	"context"
 	"fmt"
-	"github.com/SamStalschus/secrets-api/infra/auth"
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+	"github.com/SamStalschus/secrets-api/infra/hash"
 	"github.com/SamStalschus/secrets-api/infra/log"
 	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
 	"github.com/SamStalschus/secrets-api/internal"
@@ -12,14 +12,14 @@ import (
 
 type Service struct {
 	apiErr     apierr.Provider
-	auth       auth.Provider
+	auth       hash.Provider
 	logger     log.Provider
 	repository user_repo.IRepository
 }
 
 func NewService(
 	apiErr apierr.Provider,
-	auth auth.Provider,
+	auth hash.Provider,
 	logger log.Provider,
 	repository user_repo.IRepository,
 ) Service {
@@ -37,7 +37,7 @@ func (s Service) GenToken(ctx context.Context, authUser *internal.AuthUser, ip s
 		return nil, s.apiErr.BadRequest("Email or password incorrect.", fmt.Errorf("error in find password"))
 	}
 
-	err = s.auth.CheckPassword(user.Password, authUser.Password)
+	err = s.auth.Check(user.Password, authUser.Password, user.Id.Hex())
 	if err != nil {
 		return nil, s.apiErr.BadRequest("Email or password incorrect.", fmt.Errorf("error in check password"))
 	}
