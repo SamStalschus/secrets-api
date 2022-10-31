@@ -10,5 +10,6 @@ import (
 
 type IRepository interface {
 	CreateSecret(ctx context.Context, secret *internal.Secret, userID string) error
+	FindAllByUserId(ctx context.Context, userID string) []internal.Secret
 	GenerateID() primitive.ObjectID
 }

@@ -56,3 +56,8 @@ func (s Service) CreateSecret(ctx context.Context, secret *internal.Secret, user
 
 	return apiErr
 }
+
+func (s Service) GetSecrets(ctx context.Context, userID string) *[]internal.Secret {
+	secrets := s.repository.FindAllByUserId(ctx, userID)
+	return &secrets
+}

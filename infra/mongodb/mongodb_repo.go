@@ -29,6 +29,10 @@ func (r Repository) FindOne(ctx context.Context, collection string, data any, op
 	return r.client.Database(database).Collection(collection).FindOne(ctx, data, opts)
 }
 
+func (r Repository) Find(ctx context.Context, collection string, data any, opts *options.FindOptions) (*mongo.Cursor, error) {
+	return r.client.Database(database).Collection(collection).Find(ctx, data, opts)
+}
+
 func (r Repository) UpdateOne(ctx context.Context, collection string, filter any, data any) (*mongo.UpdateResult, error) {
 	return r.client.Database(database).Collection(collection).UpdateOne(ctx, filter, data)
 }

@@ -4,4 +4,5 @@ import "net/http"
 
 type IController interface {
 	CreateSecret(w http.ResponseWriter, r *http.Request)
+	GetSecrets(w http.ResponseWriter, r *http.Request)
 }

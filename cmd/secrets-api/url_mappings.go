@@ -38,7 +38,7 @@ func initializeRoutes() {
 			middlewares.HandleRequestID(
 				middlewares.RequestLogger(
 					middlewares.EnsureAuth(
-						userController.GetUser, authProvider, logger), logger))),
+						secretController.GetSecrets, authProvider, logger), logger))),
 
 		newRoute("GET", "/secrets/([^/]+)",
 			middlewares.HandleRequestID(

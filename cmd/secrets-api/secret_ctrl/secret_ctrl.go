@@ -74,6 +74,24 @@ func (c Controller) CreateSecret(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func (c Controller) GetSecrets(w http.ResponseWriter, r *http.Request) {
+	userID := internal.GetField(r.Context(), "user_id")
+
+	secrets := c.secretService.GetSecrets(r.Context(), userID)
+
+	secretsRes, err := json.Marshal(secrets)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.logger.Error(r.Context(), "Internal Server - Fail to unmarshal body", log.Body{})
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(secretsRes)
+	return
+}
+
 func (c Controller) validateBody(secret *internal.Secret) (apiErr *apiErr.Message) {
 	if secret.Value == "" || secret.Key == "" {
 		apiErr = c.apiErr.BadRequest("Missing params", fmt.Errorf(""))

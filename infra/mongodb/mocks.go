@@ -36,6 +36,21 @@ func (m *MockIRepository) EXPECT() *MockIRepositoryMockRecorder {
 	return m.recorder
 }
 
+// Find mocks base method.
+func (m *MockIRepository) Find(ctx context.Context, collection string, data any, opts *options.FindOptions) (*mongo.Cursor, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Find", ctx, collection, data, opts)
+	ret0, _ := ret[0].(*mongo.Cursor)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Find indicates an expected call of Find.
+func (mr *MockIRepositoryMockRecorder) Find(ctx, collection, data, opts interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockIRepository)(nil).Find), ctx, collection, data, opts)
+}
+
 // FindOne mocks base method.
 func (m *MockIRepository) FindOne(ctx context.Context, collection string, data any, opts *options.FindOneOptions) *mongo.SingleResult {
 	m.ctrl.T.Helper()
