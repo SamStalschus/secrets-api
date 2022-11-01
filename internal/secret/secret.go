@@ -8,6 +8,7 @@ import (
 	"github.com/SamStalschus/secrets-api/infra/log"
 	"github.com/SamStalschus/secrets-api/infra/mongodb/secret_repo"
 	"github.com/SamStalschus/secrets-api/internal"
+	"time"
 )
 
 type Service struct {
@@ -47,6 +48,7 @@ func (s Service) CreateSecret(ctx context.Context, secret *internal.Secret, user
 
 	secret.Key = string(keyHash)
 	secret.Value = string(valueHash)
+	s.setTimestamps(secret)
 
 	err = s.repository.CreateSecret(ctx, secret, userID)
 	if err != nil {
@@ -57,7 +59,49 @@ func (s Service) CreateSecret(ctx context.Context, secret *internal.Secret, user
 	return apiErr
 }
 
+func (s Service) setTimestamps(secret *internal.Secret) {
+	secret.CreatedAt = time.Now()
+	secret.UpdatedAt = time.Now()
+}
+
 func (s Service) GetSecrets(ctx context.Context, userID string) *[]internal.Secret {
 	secrets := s.repository.FindAllByUserId(ctx, userID)
+	return s.decryptKeys(&secrets)
+}
+
+func (s Service) GetSecret(ctx context.Context, secretID, userID string) (*internal.Secret, *apierr.Message) {
+	secret, err := s.repository.FindSecretByID(ctx, secretID)
+	if err != nil {
+		s.logger.Info(ctx, fmt.Sprintf("Error to get secret value by user %s", userID), log.Body{})
+		return nil, s.apiErr.BadRequest("Error to get secret value", err)
+	}
+
+	keyValue, err := s.auth.Decrypt(secret.Key, secret.Id.Hex())
+	if err != nil {
+		s.logger.Info(ctx, fmt.Sprintf("Error to decrypt secret key by user %s", userID), log.Body{})
+		return nil, s.apiErr.BadRequest("Error to get secret value", err)
+	}
+
+	value, err := s.auth.Decrypt(secret.Value, secret.Id.Hex())
+	if err != nil {
+		s.logger.Info(ctx, fmt.Sprintf("Error to decrypt secret value by user %s", userID), log.Body{})
+		return nil, s.apiErr.BadRequest("Error to get secret value", err)
+	}
+
+	secret.Key = string(keyValue)
+	secret.Value = string(value)
+	secret.UpdatedAt = time.Now()
+
+	return secret, nil
+}
+
+func (s Service) decryptKeys(doDecrypt *[]internal.Secret) *[]internal.Secret {
+	var secrets []internal.Secret
+
+	for _, secret := range *doDecrypt {
+		key, _ := s.auth.Decrypt(secret.Key, secret.Id.Hex())
+		secret.Key = string(key)
+		secrets = append(secrets, secret)
+	}
 	return &secrets
 }
