@@ -2,8 +2,6 @@ package internal
 
 import (
 	"context"
-	"net/http"
-
 	"github.com/SamStalschus/secrets-api/infra/maps"
 )
 
@@ -32,8 +30,8 @@ func mergeMaps(bodies ...ctxBody) ctxBody {
 	return body
 }
 
-func GetFields(r *http.Request, key string, index int) string {
-	keys := GetCtxValues(r.Context())[key].([]string)
+func GetFields(ctx context.Context, key string, index int) string {
+	keys := GetCtxValues(ctx)[key].([]string)
 	return keys[index]
 }
 
