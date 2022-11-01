@@ -32,3 +32,4 @@ launch.json
 /dataSources/
 /dataSources.local.xml
 /.idea/
+/bin

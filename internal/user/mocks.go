@@ -6,10 +6,10 @@ package user
 
 import (
 	context "context"
-	domain "github.com/SamStalschus/secrets-api/domain"
-	errors "github.com/SamStalschus/secrets-api/infra/errors"
 	reflect "reflect"
 
+	apierr "github.com/SamStalschus/secrets-api/infra/errors"
+	internal "github.com/SamStalschus/secrets-api/internal"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -37,10 +37,10 @@ func (m *MockIService) EXPECT() *MockIServiceMockRecorder {
 }
 
 // CreateUser mocks base method.
-func (m *MockIService) CreateUser(ctx context.Context, user *domain.User) *errors.Message {
+func (m *MockIService) CreateUser(ctx context.Context, user *internal.User) *apierr.Message {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", ctx, user)
-	ret0, _ := ret[0].(*errors.Message)
+	ret0, _ := ret[0].(*apierr.Message)
 	return ret0
 }
 
@@ -50,17 +50,17 @@ func (mr *MockIServiceMockRecorder) CreateUser(ctx, user interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockIService)(nil).CreateUser), ctx, user)
 }
 
-// GetUserByEmail mocks base method.
-func (m *MockIService) GetUserByEmail(ctx context.Context, userEmail string) (*domain.User, *errors.Message) {
+// GetUser mocks base method.
+func (m *MockIService) GetUser(ctx context.Context, userID string) (*internal.User, *apierr.Message) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserByEmail", ctx, userEmail)
-	ret0, _ := ret[0].(*domain.User)
-	ret1, _ := ret[1].(*errors.Message)
+	ret := m.ctrl.Call(m, "GetUser", ctx, userID)
+	ret0, _ := ret[0].(*internal.User)
+	ret1, _ := ret[1].(*apierr.Message)
 	return ret0, ret1
 }
 
-// GetUserByEmail indicates an expected call of GetUserByEmail.
-func (mr *MockIServiceMockRecorder) GetUserByEmail(ctx, userEmail interface{}) *gomock.Call {
+// GetUser indicates an expected call of GetUser.
+func (mr *MockIServiceMockRecorder) GetUser(ctx, userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByEmail", reflect.TypeOf((*MockIService)(nil).GetUserByEmail), ctx, userEmail)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockIService)(nil).GetUser), ctx, userID)
 }

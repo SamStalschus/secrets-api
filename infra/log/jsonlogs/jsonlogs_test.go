@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/SamStalschus/secrets-api/domain"
 	"github.com/SamStalschus/secrets-api/infra/log"
 	tt "github.com/SamStalschus/secrets-api/infra/testtools"
+	"github.com/SamStalschus/secrets-api/internal"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -149,10 +149,10 @@ func TestLogFuncs(t *testing.T) {
 			PrintlnFn: func(args ...interface{}) {
 				output = fmt.Sprintln(args...)
 			},
-			ctxParsers: []ContextParser{domain.GetCtxValues},
+			ctxParsers: []ContextParser{internal.GetCtxValues},
 		}
 
-		ctx = domain.CtxWithValues(ctx, log.Body{
+		ctx = internal.CtxWithValues(ctx, log.Body{
 			"ctx_value1": "overwritten",
 			"ctx_value2": "overwritten",
 			"ctx_value3": "not-overwritten",
@@ -215,10 +215,10 @@ func TestLogFuncs(t *testing.T) {
 			PrintlnFn: func(args ...interface{}) {
 				output = fmt.Sprintln(args...)
 			},
-			ctxParsers: []ContextParser{domain.GetCtxValues},
+			ctxParsers: []ContextParser{internal.GetCtxValues},
 		}
 
-		ctx = domain.CtxWithValues(ctx, log.Body{
+		ctx = internal.CtxWithValues(ctx, log.Body{
 			"ctx_value1": "overwritten",
 			"ctx_value2": "overwritten",
 			"ctx_value3": "not-overwritten",
@@ -279,10 +279,10 @@ func TestLogFuncs(t *testing.T) {
 			PrintlnFn: func(args ...interface{}) {
 				output = fmt.Sprintln(args...)
 			},
-			ctxParsers: []ContextParser{domain.GetCtxValues},
+			ctxParsers: []ContextParser{internal.GetCtxValues},
 		}
 
-		ctx = domain.CtxWithValues(ctx, log.Body{
+		ctx = internal.CtxWithValues(ctx, log.Body{
 			"ctx_value1": "overwritten",
 			"ctx_value2": "overwritten",
 			"ctx_value3": "not-overwritten",
@@ -343,10 +343,10 @@ func TestLogFuncs(t *testing.T) {
 			PrintlnFn: func(args ...interface{}) {
 				output = fmt.Sprintln(args...)
 			},
-			ctxParsers: []ContextParser{domain.GetCtxValues},
+			ctxParsers: []ContextParser{internal.GetCtxValues},
 		}
 
-		ctx = domain.CtxWithValues(ctx, log.Body{
+		ctx = internal.CtxWithValues(ctx, log.Body{
 			"ctx_value1": "overwritten",
 			"ctx_value2": "overwritten",
 			"ctx_value3": "not-overwritten",

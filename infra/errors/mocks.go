@@ -60,3 +60,17 @@ func (mr *MockProviderMockRecorder) InternalServerError(err interface{}) *gomock
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InternalServerError", reflect.TypeOf((*MockProvider)(nil).InternalServerError), err)
 }
+
+// Unauthorized mocks base method.
+func (m *MockProvider) Unauthorized(message string) *Message {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Unauthorized", message)
+	ret0, _ := ret[0].(*Message)
+	return ret0
+}
+
+// Unauthorized indicates an expected call of Unauthorized.
+func (mr *MockProviderMockRecorder) Unauthorized(message interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unauthorized", reflect.TypeOf((*MockProvider)(nil).Unauthorized), message)
+}

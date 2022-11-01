@@ -6,10 +6,11 @@ package user_repo
 
 import (
 	context "context"
-	domain "github.com/SamStalschus/secrets-api/domain"
 	reflect "reflect"
 
+	internal "github.com/SamStalschus/secrets-api/internal"
 	gomock "github.com/golang/mock/gomock"
+	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // MockIRepository is a mock of IRepository interface.
@@ -36,7 +37,7 @@ func (m *MockIRepository) EXPECT() *MockIRepositoryMockRecorder {
 }
 
 // CreateUser mocks base method.
-func (m *MockIRepository) CreateUser(ctx context.Context, user *domain.User) (string, error) {
+func (m *MockIRepository) CreateUser(ctx context.Context, user *internal.User) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", ctx, user)
 	ret0, _ := ret[0].(string)
@@ -51,10 +52,10 @@ func (mr *MockIRepositoryMockRecorder) CreateUser(ctx, user interface{}) *gomock
 }
 
 // FindUserByEmail mocks base method.
-func (m *MockIRepository) FindUserByEmail(ctx context.Context, email string) (*domain.User, error) {
+func (m *MockIRepository) FindUserByEmail(ctx context.Context, email string) (*internal.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByEmail", ctx, email)
-	ret0, _ := ret[0].(*domain.User)
+	ret0, _ := ret[0].(*internal.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -63,4 +64,48 @@ func (m *MockIRepository) FindUserByEmail(ctx context.Context, email string) (*d
 func (mr *MockIRepositoryMockRecorder) FindUserByEmail(ctx, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUserByEmail", reflect.TypeOf((*MockIRepository)(nil).FindUserByEmail), ctx, email)
+}
+
+// FindUserByID mocks base method.
+func (m *MockIRepository) FindUserByID(ctx context.Context, id string) (*internal.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindUserByID", ctx, id)
+	ret0, _ := ret[0].(*internal.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindUserByID indicates an expected call of FindUserByID.
+func (mr *MockIRepositoryMockRecorder) FindUserByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUserByID", reflect.TypeOf((*MockIRepository)(nil).FindUserByID), ctx, id)
+}
+
+// FindWithPasswordByEmail mocks base method.
+func (m *MockIRepository) FindWithPasswordByEmail(ctx context.Context, email string) (*internal.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindWithPasswordByEmail", ctx, email)
+	ret0, _ := ret[0].(*internal.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindWithPasswordByEmail indicates an expected call of FindWithPasswordByEmail.
+func (mr *MockIRepositoryMockRecorder) FindWithPasswordByEmail(ctx, email interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindWithPasswordByEmail", reflect.TypeOf((*MockIRepository)(nil).FindWithPasswordByEmail), ctx, email)
+}
+
+// GenerateID mocks base method.
+func (m *MockIRepository) GenerateID() primitive.ObjectID {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GenerateID")
+	ret0, _ := ret[0].(primitive.ObjectID)
+	return ret0
+}
+
+// GenerateID indicates an expected call of GenerateID.
+func (mr *MockIRepositoryMockRecorder) GenerateID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateID", reflect.TypeOf((*MockIRepository)(nil).GenerateID))
 }

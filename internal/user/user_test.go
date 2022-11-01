@@ -3,11 +3,12 @@ package user
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"reflect"
 	"testing"
 
-	"github.com/SamStalschus/secrets-api/domain"
-	"github.com/SamStalschus/secrets-api/infra/bcrypt"
+	"github.com/SamStalschus/secrets-api/infra/hash"
+	"github.com/SamStalschus/secrets-api/internal"
 	"github.com/golang/mock/gomock"
 
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
@@ -21,15 +22,15 @@ func TestService_CreateUser(t *testing.T) {
 	logger := log.NewMockProvider(mockCtrl)
 	repository := user_repo.NewMockIRepository(mockCtrl)
 	apiErr := apierr.NewMockProvider(mockCtrl)
-	bcryptMck := bcrypt.NewMockProvider(mockCtrl)
+	auth := hash.NewMockProvider(mockCtrl)
 
-	service := NewService(logger, repository, apiErr, bcryptMck)
+	service := NewService(logger, repository, apiErr, auth)
 
 	type structure struct {
 		name       string
 		prepare    func(t structure)
 		ctx        context.Context
-		user       *domain.User
+		user       *internal.User
 		wantApiErr *apierr.Message
 	}
 
@@ -37,13 +38,15 @@ func TestService_CreateUser(t *testing.T) {
 		{
 			name: "Create user with success",
 			prepare: func(tt structure) {
+				hex, _ := primitive.ObjectIDFromHex("6355fd6995b4c8d74085a286")
+				repository.EXPECT().GenerateID().Return(hex)
 				repository.EXPECT().FindUserByEmail(tt.ctx, tt.user.Email).Return(nil, nil)
-				bcryptMck.EXPECT().EncryptPassword(tt.user.Password).Return([]byte("$2a$10$isZtzwTnub0jp1HgZi/4xO9RpGaWsx4GUcpVEA1DycepyoqiV0sH."), nil)
+				auth.EXPECT().Encrypt(tt.user.Password, gomock.Any()).Return([]byte("$2a$10$isZtzwTnub0jp1HgZi/4xO9RpGaWsx4GUcpVEA1DycepyoqiV0sH."), nil)
 				repository.EXPECT().CreateUser(tt.ctx, gomock.Any()).Return("6355fd6995b4c8d74085a286", nil)
 				logger.EXPECT().Info(gomock.Any(), gomock.Any(), gomock.Any())
 			},
 			ctx: context.Background(),
-			user: &domain.User{
+			user: &internal.User{
 				Email:    "zeze@email.com",
 				Password: "123456789",
 				Name:     "Zeze",
@@ -57,7 +60,7 @@ func TestService_CreateUser(t *testing.T) {
 				apiErr.EXPECT().BadRequest(tt.wantApiErr.ErrorMessage, gomock.Any()).Return(tt.wantApiErr)
 			},
 			ctx: context.Background(),
-			user: &domain.User{
+			user: &internal.User{
 				Email:    "zeze@email.com",
 				Password: "123456789",
 				Name:     "Zeze",
@@ -69,12 +72,14 @@ func TestService_CreateUser(t *testing.T) {
 		{
 			name: "Error because error in encrypt password",
 			prepare: func(tt structure) {
+				hex, _ := primitive.ObjectIDFromHex("6355fd6995b4c8d74085a286")
+				repository.EXPECT().GenerateID().Return(hex)
 				repository.EXPECT().FindUserByEmail(tt.ctx, tt.user.Email).Return(nil, nil)
-				bcryptMck.EXPECT().EncryptPassword(tt.user.Password).Return(nil, fmt.Errorf(""))
+				auth.EXPECT().Encrypt(tt.user.Password, gomock.Any()).Return(nil, fmt.Errorf(""))
 				apiErr.EXPECT().InternalServerError(fmt.Errorf("")).Return(tt.wantApiErr)
 			},
 			ctx: context.Background(),
-			user: &domain.User{
+			user: &internal.User{
 				Email:    "zeze@email.com",
 				Password: "123456789",
 				Name:     "Zeze",
@@ -94,7 +99,7 @@ func TestService_CreateUser(t *testing.T) {
 	}
 }
 
-func TestService_GetUserByEmail(t *testing.T) {
+func TestService_GetUser(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 
 	repository := user_repo.NewMockIRepository(mockCtrl)
@@ -106,8 +111,8 @@ func TestService_GetUserByEmail(t *testing.T) {
 		name       string
 		prepare    func(t structure)
 		ctx        context.Context
-		userEmail  string
-		wantUser   *domain.User
+		userID     string
+		wantUser   *internal.User
 		wantApiErr *apierr.Message
 	}
 
@@ -115,11 +120,11 @@ func TestService_GetUserByEmail(t *testing.T) {
 		{
 			name: "User getted with success",
 			prepare: func(tt structure) {
-				repository.EXPECT().FindUserByEmail(tt.ctx, tt.userEmail).Return(tt.wantUser, nil)
+				repository.EXPECT().FindUserByID(tt.ctx, tt.userID).Return(tt.wantUser, nil)
 			},
-			ctx:       context.Background(),
-			userEmail: "zeze@email.com",
-			wantUser: &domain.User{
+			ctx:    context.Background(),
+			userID: "123",
+			wantUser: &internal.User{
 				Email: "zeze@email.com",
 				Name:  "Zeze",
 			},
@@ -128,12 +133,11 @@ func TestService_GetUserByEmail(t *testing.T) {
 		{
 			name: "Error because user don't exists",
 			prepare: func(tt structure) {
-				repository.EXPECT().FindUserByEmail(tt.ctx, tt.userEmail).Return(tt.wantUser, nil)
+				repository.EXPECT().FindUserByID(tt.ctx, tt.userID).Return(tt.wantUser, nil)
 				apiErr.EXPECT().BadRequest(tt.wantApiErr.ErrorMessage, gomock.Any()).Return(tt.wantApiErr)
 			},
-			ctx:       context.Background(),
-			userEmail: "zeze@email.com",
-			wantUser:  nil,
+			userID:   "123",
+			wantUser: nil,
 			wantApiErr: &apierr.Message{
 				ErrorMessage: "User don't exists",
 			},
@@ -143,7 +147,7 @@ func TestService_GetUserByEmail(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.prepare(tt)
 
-			gotUser, gotApiErr := service.GetUserByEmail(tt.ctx, tt.userEmail)
+			gotUser, gotApiErr := service.GetUser(tt.ctx, tt.userID)
 			if !reflect.DeepEqual(gotUser, tt.wantUser) {
 				t.Errorf("GetUserByEmail() gotUser = %v, want %v", gotUser, tt.wantUser)
 			}

@@ -6,10 +6,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/SamStalschus/secrets-api/domain"
-	"github.com/SamStalschus/secrets-api/domain/user"
 	apiErr "github.com/SamStalschus/secrets-api/infra/errors"
 	"github.com/SamStalschus/secrets-api/infra/log"
+	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/SamStalschus/secrets-api/internal/user"
 )
 
 type Controller struct {
@@ -38,7 +38,7 @@ func (c Controller) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user domain.User
+	var user internal.User
 
 	err = json.Unmarshal(body, &user)
 	if err != nil {
@@ -73,10 +73,10 @@ func (c Controller) SignUp(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (c Controller) GetUserByEmail(w http.ResponseWriter, r *http.Request) {
-	email := domain.GetFields(r, "CtxKey", 0)
+func (c Controller) GetUser(w http.ResponseWriter, r *http.Request) {
+	userID := internal.GetField(r.Context(), "user_id")
 
-	user, errResponse := c.usersService.GetUserByEmail(r.Context(), email)
+	user, errResponse := c.usersService.GetUser(r.Context(), userID)
 	if errResponse != nil {
 		response, _ := json.Marshal(errResponse)
 		w.Header().Set("Content-Type", "application/json")
@@ -98,7 +98,7 @@ func (c Controller) GetUserByEmail(w http.ResponseWriter, r *http.Request) {
 	w.Write(userRes)
 }
 
-func (c Controller) validateBody(user *domain.User) (apiErr *apiErr.Message) {
+func (c Controller) validateBody(user *internal.User) (apiErr *apiErr.Message) {
 	if user.Email == "" || user.Name == "" || user.Password == "" {
 		apiErr = c.apiErr.BadRequest("Missing params", fmt.Errorf(""))
 	}
