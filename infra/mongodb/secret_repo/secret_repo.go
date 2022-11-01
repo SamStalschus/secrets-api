@@ -44,6 +44,16 @@ func (r Repository) FindAllByUserId(ctx context.Context, userID string) (secrets
 	return secrets
 }
 
+func (r Repository) FindSecretByID(ctx context.Context, id string) (*internal.Secret, error) {
+	var secret internal.Secret
+
+	objectID, _ := primitive.ObjectIDFromHex(id)
+
+	err := r.repository.FindOne(ctx, collection, bson.M{"_id": objectID}, nil).Decode(&secret)
+
+	return &secret, err
+}
+
 func (r Repository) GenerateID() primitive.ObjectID {
 	return primitive.NewObjectID()
 }

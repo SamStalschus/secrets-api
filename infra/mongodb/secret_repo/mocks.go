@@ -50,6 +50,35 @@ func (mr *MockIRepositoryMockRecorder) CreateSecret(ctx, secret, userID interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSecret", reflect.TypeOf((*MockIRepository)(nil).CreateSecret), ctx, secret, userID)
 }
 
+// FindAllByUserId mocks base method.
+func (m *MockIRepository) FindAllByUserId(ctx context.Context, userID string) []internal.Secret {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindAllByUserId", ctx, userID)
+	ret0, _ := ret[0].([]internal.Secret)
+	return ret0
+}
+
+// FindAllByUserId indicates an expected call of FindAllByUserId.
+func (mr *MockIRepositoryMockRecorder) FindAllByUserId(ctx, userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllByUserId", reflect.TypeOf((*MockIRepository)(nil).FindAllByUserId), ctx, userID)
+}
+
+// FindSecretByID mocks base method.
+func (m *MockIRepository) FindSecretByID(ctx context.Context, id string) (*internal.Secret, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindSecretByID", ctx, id)
+	ret0, _ := ret[0].(*internal.Secret)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindSecretByID indicates an expected call of FindSecretByID.
+func (mr *MockIRepositoryMockRecorder) FindSecretByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindSecretByID", reflect.TypeOf((*MockIRepository)(nil).FindSecretByID), ctx, id)
+}
+
 // GenerateID mocks base method.
 func (m *MockIRepository) GenerateID() primitive.ObjectID {
 	m.ctrl.T.Helper()

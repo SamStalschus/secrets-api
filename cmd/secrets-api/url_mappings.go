@@ -44,7 +44,7 @@ func initializeRoutes() {
 			middlewares.HandleRequestID(
 				middlewares.RequestLogger(
 					middlewares.EnsureAuth(
-						userController.GetUser, authProvider, logger), logger))),
+						secretController.GetSecret, authProvider, logger), logger))),
 
 		//newRoute("PUT", "/secret/([0-9]+)", updateSecret),
 	}
