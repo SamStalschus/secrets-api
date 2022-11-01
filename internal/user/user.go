@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"time"
 
 	apierr "github.com/SamStalschus/secrets-api/infra/errors"
 	"github.com/SamStalschus/secrets-api/infra/hash"
@@ -41,12 +42,12 @@ func (s Service) CreateUser(ctx context.Context, user *internal.User) (apiErr *a
 
 	user.Id = s.repository.GenerateID()
 
-	passwordHash, err := s.auth.Encrypt(user.Password, user.Id.Hex())
-	if err != nil {
-		return s.apiErr.InternalServerError(err)
+	apiErr = s.encryptPassword(user)
+	if apiErr != nil {
+		return apiErr
 	}
 
-	user.Password = string(passwordHash)
+	s.setTimestamps(user)
 
 	id, err := s.repository.CreateUser(ctx, user)
 	if err != nil {
@@ -56,6 +57,21 @@ func (s Service) CreateUser(ctx context.Context, user *internal.User) (apiErr *a
 	s.logger.Info(ctx, fmt.Sprintf("User created: %s", id), log.Body{})
 
 	return apiErr
+}
+
+func (s Service) encryptPassword(user *internal.User) *apierr.Message {
+	passwordHash, err := s.auth.Encrypt(user.Password, user.Id.Hex())
+	if err != nil {
+		return s.apiErr.InternalServerError(err)
+	}
+
+	user.Password = string(passwordHash)
+	return nil
+}
+
+func (s Service) setTimestamps(user *internal.User) {
+	user.UpdatedAt = time.Now()
+	user.CreatedAt = time.Now()
 }
 
 func (s Service) GetUser(ctx context.Context, userID string) (user *internal.User, apiErr *apierr.Message) {
