@@ -2,24 +2,24 @@ package main
 
 import (
 	"fmt"
-	"github.com/SamStalschus/secrets-api/cmd/secrets-api/auth_ctrl"
-	"github.com/SamStalschus/secrets-api/cmd/secrets-api/secret_ctrl"
-	"github.com/SamStalschus/secrets-api/infra/mongodb/secret_repo"
-	authService "github.com/SamStalschus/secrets-api/internal/auth"
-	"github.com/SamStalschus/secrets-api/internal/secret"
+	"github.com/sstalschus/secrets-api/cmd/secrets-api/auth_ctrl"
+	"github.com/sstalschus/secrets-api/cmd/secrets-api/secret_ctrl"
+	"github.com/sstalschus/secrets-api/infra/mongodb/secret_repo"
+	authService "github.com/sstalschus/secrets-api/internal/auth"
+	"github.com/sstalschus/secrets-api/internal/secret"
 	"net/http"
 
-	"github.com/SamStalschus/secrets-api/infra/hash"
+	"github.com/sstalschus/secrets-api/infra/hash"
 
-	"github.com/SamStalschus/secrets-api/cmd/secrets-api/user_ctrl"
-	"github.com/SamStalschus/secrets-api/infra/env"
-	apierr "github.com/SamStalschus/secrets-api/infra/errors"
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/infra/log/jsonlogs"
-	"github.com/SamStalschus/secrets-api/infra/mongodb"
-	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
-	"github.com/SamStalschus/secrets-api/internal"
-	"github.com/SamStalschus/secrets-api/internal/user"
+	"github.com/sstalschus/secrets-api/cmd/secrets-api/user_ctrl"
+	"github.com/sstalschus/secrets-api/infra/env"
+	apierr "github.com/sstalschus/secrets-api/infra/errors"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/infra/log/jsonlogs"
+	"github.com/sstalschus/secrets-api/infra/mongodb"
+	"github.com/sstalschus/secrets-api/infra/mongodb/user_repo"
+	"github.com/sstalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/internal/user"
 )
 
 var (

@@ -3,11 +3,11 @@ package secret
 import (
 	"context"
 	"fmt"
-	apierr "github.com/SamStalschus/secrets-api/infra/errors"
-	"github.com/SamStalschus/secrets-api/infra/hash"
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/infra/mongodb/secret_repo"
-	"github.com/SamStalschus/secrets-api/internal"
+	apierr "github.com/sstalschus/secrets-api/infra/errors"
+	"github.com/sstalschus/secrets-api/infra/hash"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/infra/mongodb/secret_repo"
+	"github.com/sstalschus/secrets-api/internal"
 	"time"
 )
 

@@ -7,13 +7,13 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/SamStalschus/secrets-api/infra/hash"
-	"github.com/SamStalschus/secrets-api/internal"
 	"github.com/golang/mock/gomock"
+	"github.com/sstalschus/secrets-api/infra/hash"
+	"github.com/sstalschus/secrets-api/internal"
 
-	apierr "github.com/SamStalschus/secrets-api/infra/errors"
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
+	apierr "github.com/sstalschus/secrets-api/infra/errors"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/infra/mongodb/user_repo"
 )
 
 func TestService_CreateUser(t *testing.T) {

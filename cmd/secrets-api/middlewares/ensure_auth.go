@@ -2,9 +2,9 @@ package middlewares
 
 import (
 	"fmt"
-	"github.com/SamStalschus/secrets-api/infra/hash"
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/infra/hash"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/internal"
 	"net/http"
 )
 

@@ -3,8 +3,8 @@ package user_repo
 import (
 	"context"
 
-	"github.com/SamStalschus/secrets-api/infra/mongodb"
-	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/infra/mongodb"
+	"github.com/sstalschus/secrets-api/internal"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"

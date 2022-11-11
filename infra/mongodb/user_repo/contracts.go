@@ -4,7 +4,7 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/internal"
 )
 
 //go:generate mockgen -destination=./mocks.go -package=user_repo -source=./contracts.go

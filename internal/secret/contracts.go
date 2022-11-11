@@ -2,8 +2,8 @@ package secret
 
 import (
 	"context"
-	apierr "github.com/SamStalschus/secrets-api/infra/errors"
-	"github.com/SamStalschus/secrets-api/internal"
+	apierr "github.com/sstalschus/secrets-api/infra/errors"
+	"github.com/sstalschus/secrets-api/internal"
 )
 
 //go:generate mockgen -destination=./mocks.go -package=secret -source=./contracts.go

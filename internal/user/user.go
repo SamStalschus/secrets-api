@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	apierr "github.com/SamStalschus/secrets-api/infra/errors"
-	"github.com/SamStalschus/secrets-api/infra/hash"
+	apierr "github.com/sstalschus/secrets-api/infra/errors"
+	"github.com/sstalschus/secrets-api/infra/hash"
 
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/infra/mongodb/user_repo"
-	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/infra/mongodb/user_repo"
+	"github.com/sstalschus/secrets-api/internal"
 )
 
 type Service struct {

@@ -5,9 +5,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/SamStalschus/secrets-api/cmd/secrets-api/middlewares"
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/cmd/secrets-api/middlewares"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/internal"
 )
 
 var routes []route

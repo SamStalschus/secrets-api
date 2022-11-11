@@ -2,7 +2,7 @@ package internal
 
 import (
 	"context"
-	"github.com/SamStalschus/secrets-api/infra/maps"
+	"github.com/sstalschus/secrets-api/infra/maps"
 )
 
 type logCtxKey struct{}

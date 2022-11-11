@@ -2,7 +2,7 @@ package secret_repo
 
 import (
 	"context"
-	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/internal"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

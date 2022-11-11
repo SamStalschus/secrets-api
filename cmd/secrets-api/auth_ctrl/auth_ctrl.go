@@ -3,10 +3,10 @@ package auth_ctrl
 import (
 	"encoding/json"
 	"fmt"
-	apiErr "github.com/SamStalschus/secrets-api/infra/errors"
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/internal"
-	"github.com/SamStalschus/secrets-api/internal/auth"
+	apiErr "github.com/sstalschus/secrets-api/infra/errors"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/internal/auth"
 	"io/ioutil"
 	"net/http"
 )

@@ -8,9 +8,9 @@ import (
 	context "context"
 	reflect "reflect"
 
-	apierr "github.com/SamStalschus/secrets-api/infra/errors"
-	internal "github.com/SamStalschus/secrets-api/internal"
 	gomock "github.com/golang/mock/gomock"
+	apierr "github.com/sstalschus/secrets-api/infra/errors"
+	internal "github.com/sstalschus/secrets-api/internal"
 )
 
 // MockIService is a mock of IService interface.

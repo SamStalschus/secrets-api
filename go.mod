@@ -1,4 +1,4 @@
-module github.com/SamStalschus/secrets-api
+module github.com/sstalschus/secrets-api
 
 go 1.18
 

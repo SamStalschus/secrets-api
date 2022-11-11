@@ -3,10 +3,10 @@ package secret_ctrl
 import (
 	"encoding/json"
 	"fmt"
-	apiErr "github.com/SamStalschus/secrets-api/infra/errors"
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/internal"
-	"github.com/SamStalschus/secrets-api/internal/secret"
+	apiErr "github.com/sstalschus/secrets-api/infra/errors"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/internal/secret"
 	"io/ioutil"
 	"net/http"
 )

@@ -3,8 +3,8 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/SamStalschus/secrets-api/infra/log"
-	"github.com/SamStalschus/secrets-api/internal"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/internal"
 )
 
 func HandleRequestID(h http.HandlerFunc) http.HandlerFunc {

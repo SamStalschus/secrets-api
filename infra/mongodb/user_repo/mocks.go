@@ -8,8 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	internal "github.com/SamStalschus/secrets-api/internal"
 	gomock "github.com/golang/mock/gomock"
+	internal "github.com/sstalschus/secrets-api/internal"
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
