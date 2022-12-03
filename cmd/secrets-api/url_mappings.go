@@ -14,6 +14,7 @@ var routes []route
 
 func initializeRoutes() {
 	routes = []route{
+		newRoute("GET", "/ping", ping),
 		newRoute("POST", "/users",
 			middlewares.HandleRequestID(
 				middlewares.RequestLogger(userController.SignUp, logger))),
@@ -83,4 +84,9 @@ func Server(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.NotFound(w, r)
+}
+
+func ping(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Pong"))
 }
