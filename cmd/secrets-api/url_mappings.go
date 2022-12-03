@@ -74,6 +74,7 @@ func Server(w http.ResponseWriter, r *http.Request) {
 			ctx := internal.CtxWithValues(r.Context(), log.Body{
 				"CtxKey": matches[1:],
 			})
+			w.Header().Set("Access-Control-Allow-Origin", "*")
 			route.handler(w, r.WithContext(ctx))
 			return
 		}
