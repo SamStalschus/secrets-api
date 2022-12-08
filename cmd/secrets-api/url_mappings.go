@@ -74,7 +74,7 @@ func Server(w http.ResponseWriter, r *http.Request) {
 			ctx := internal.CtxWithValues(r.Context(), log.Body{
 				"CtxKey": matches[1:],
 			})
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			enableCors(&w)
 			route.handler(w, r.WithContext(ctx))
 			return
 		}
@@ -90,4 +90,11 @@ func Server(w http.ResponseWriter, r *http.Request) {
 func ping(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Pong"))
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization,X-CSRF-Token")
+	(*w).Header().Set("Access-Control-Expose-Headers", "Authorization")
 }
