@@ -98,4 +98,5 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
 	(*w).Header().Set("Access-Control-Expose-Headers", "Authorization")
 	(*w).Header().Set("Access-Control-Expose-Credentials", "true")
+	(*w).Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
