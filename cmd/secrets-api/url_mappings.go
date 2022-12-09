@@ -62,7 +62,10 @@ type route struct {
 }
 
 func Server(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+	}
+	//enableCors(&w)
 	initializeRoutes()
 	var allow []string
 	for _, route := range routes {
