@@ -74,7 +74,7 @@ func Server(w http.ResponseWriter, r *http.Request) {
 			ctx := internal.CtxWithValues(r.Context(), log.Body{
 				"CtxKey": matches[1:],
 			})
-			enableCors(&w)
+			//enableCors(&w)
 			route.handler(w, r.WithContext(ctx))
 			return
 		}
