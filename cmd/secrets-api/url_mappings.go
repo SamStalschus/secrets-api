@@ -94,7 +94,8 @@ func ping(w http.ResponseWriter, r *http.Request) {
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization,X-CSRF-Token")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET,POST")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
 	(*w).Header().Set("Access-Control-Expose-Headers", "Authorization")
+	(*w).Header().Set("Access-Control-Expose-Credentials", "true")
 }
