@@ -60,7 +60,7 @@ func (c Client) NewJwt(sub string) (string, error) {
 		"iss": "secrets",
 		"sub": sub,
 		"aud": "any",
-		"exp": time.Now().Add(time.Minute * 1).Unix(),
+		"exp": time.Now().Add(time.Minute * 3).Unix(),
 	})
 
 	return token.SignedString([]byte(c.SecretKey))
