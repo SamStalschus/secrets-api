@@ -65,6 +65,8 @@ func main() {
 }
 
 func run(port string) error {
-	handler := http.HandlerFunc(Server)
-	return http.ListenAndServe(":"+port, cors.Default().Handler(handler))
+	mux := http.NewServeMux()
+	mux.HandleFunc("/ping", ping)
+	//handler := http.HandlerFunc(Server)
+	return http.ListenAndServe(":"+port, cors.Default().Handler(mux))
 }
