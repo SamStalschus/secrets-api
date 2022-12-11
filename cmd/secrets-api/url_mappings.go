@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -60,6 +61,8 @@ type route struct {
 }
 
 func Server(w http.ResponseWriter, r *http.Request) {
+	logger.Info(r.Context(), fmt.Sprintf("Receivig request of url %s and host %s", r.URL, r.Host))
+
 	w.Header().Set("Access-Control-Allow-Headers:", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "*")
