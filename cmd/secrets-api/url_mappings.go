@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"regexp"
-	"strings"
-
 	"github.com/sstalschus/secrets-api/cmd/secrets-api/middlewares"
 	"github.com/sstalschus/secrets-api/infra/log"
 	"github.com/sstalschus/secrets-api/internal"
+	"net/http"
+	"regexp"
+	"strings"
 )
 
 var routes []route
@@ -68,15 +67,14 @@ func Server(w http.ResponseWriter, r *http.Request) {
 			r.Host,
 			r.Method))
 
-	w.Header().Set("Access-Control-Allow-Headers:", "*")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Access-Control-Max-Age", "1000")
-
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
+	//w.Header().Set("Access-Control-Allow-Headers:", "*")
+	//w.Header().Set("Access-Control-Allow-Origin", "*")
+	//w.Header().Set("Access-Control-Allow-Methods", "*")
+	//w.Header().Set("Access-Control-Max-Age", "1000")
+	//
+	//if r.Method == "OPTIONS" {
+	//	w.WriteHeader(http.StatusOK)
+	//}
 
 	initializeRoutes()
 	var allow []string

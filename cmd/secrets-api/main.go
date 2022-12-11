@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/rs/cors"
 	"github.com/sstalschus/secrets-api/cmd/secrets-api/auth_ctrl"
 	"github.com/sstalschus/secrets-api/cmd/secrets-api/secret_ctrl"
 	"github.com/sstalschus/secrets-api/infra/mongodb/secret_repo"
@@ -65,5 +66,5 @@ func main() {
 
 func run(port string) error {
 	handler := http.HandlerFunc(Server)
-	return http.ListenAndServe(":"+port, handler)
+	return http.ListenAndServe(":"+port, cors.Default().Handler(handler))
 }
