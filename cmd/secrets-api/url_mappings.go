@@ -61,7 +61,12 @@ type route struct {
 }
 
 func Server(w http.ResponseWriter, r *http.Request) {
-	logger.Info(r.Context(), fmt.Sprintf("Receivig request of url %s and host %s", r.URL, r.Host))
+	logger.Info(r.Context(),
+		fmt.Sprintf(
+			"Receivig request of url %s and host %s and method %s",
+			r.URL,
+			r.Host,
+			r.Method))
 
 	w.Header().Set("Access-Control-Allow-Headers:", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
