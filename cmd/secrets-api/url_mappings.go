@@ -67,15 +67,6 @@ func Server(w http.ResponseWriter, r *http.Request) {
 			r.Host,
 			r.Method))
 
-	//w.Header().Set("Access-Control-Allow-Headers:", "*")
-	//w.Header().Set("Access-Control-Allow-Origin", "*")
-	//w.Header().Set("Access-Control-Allow-Methods", "*")
-	//w.Header().Set("Access-Control-Max-Age", "1000")
-	//
-	//if r.Method == "OPTIONS" {
-	//	w.WriteHeader(http.StatusOK)
-	//}
-
 	initializeRoutes()
 	var allow []string
 	for _, route := range routes {
