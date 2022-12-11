@@ -67,6 +67,9 @@ func main() {
 func run(port string) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ping", ping)
+
+	cors := cors.AllowAll()
+
 	//handler := http.HandlerFunc(Server)
-	return http.ListenAndServe(":"+port, cors.Default().Handler(mux))
+	return http.ListenAndServe(":"+port, cors.Handler(mux))
 }
