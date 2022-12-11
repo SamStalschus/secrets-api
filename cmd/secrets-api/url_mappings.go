@@ -60,7 +60,11 @@ type route struct {
 }
 
 func Server(w http.ResponseWriter, r *http.Request) {
-	handlePreflight(&w, r)
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	initializeRoutes()
 	var allow []string
 	for _, route := range routes {
@@ -88,11 +92,4 @@ func Server(w http.ResponseWriter, r *http.Request) {
 func ping(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Pong"))
-}
-
-func handlePreflight(w *http.ResponseWriter, r *http.Request) {
-	if r.Method == "OPTIONS" {
-		(*w).WriteHeader(http.StatusOK)
-		return
-	}
 }
