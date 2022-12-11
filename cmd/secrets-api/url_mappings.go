@@ -60,6 +60,10 @@ type route struct {
 }
 
 func Server(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers:", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "*")
+
 	if r.Method == "OPTIONS" {
 		w.WriteHeader(http.StatusOK)
 		return
