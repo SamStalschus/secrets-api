@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+
 	apierr "github.com/sstalschus/secrets-api/infra/errors"
 	"github.com/sstalschus/secrets-api/internal"
 )

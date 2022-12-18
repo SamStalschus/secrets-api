@@ -3,12 +3,13 @@ package auth_ctrl
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+
 	apiErr "github.com/sstalschus/secrets-api/infra/errors"
 	"github.com/sstalschus/secrets-api/infra/log"
 	"github.com/sstalschus/secrets-api/internal"
 	"github.com/sstalschus/secrets-api/internal/auth"
-	"io/ioutil"
-	"net/http"
 )
 
 type Controller struct {

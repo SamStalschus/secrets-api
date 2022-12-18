@@ -3,12 +3,13 @@ package secret
 import (
 	"context"
 	"fmt"
+	"time"
+
 	apierr "github.com/sstalschus/secrets-api/infra/errors"
 	"github.com/sstalschus/secrets-api/infra/hash"
 	"github.com/sstalschus/secrets-api/infra/log"
 	"github.com/sstalschus/secrets-api/infra/mongodb/secret_repo"
 	"github.com/sstalschus/secrets-api/internal"
-	"time"
 )
 
 type Service struct {

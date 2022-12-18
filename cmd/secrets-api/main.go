@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/rs/cors"
 	"github.com/sstalschus/secrets-api/cmd/secrets-api/auth_ctrl"
 	"github.com/sstalschus/secrets-api/cmd/secrets-api/secret_ctrl"
+	"github.com/sstalschus/secrets-api/infra/cache"
+	"github.com/sstalschus/secrets-api/infra/cache/memorycache"
 	"github.com/sstalschus/secrets-api/infra/mongodb/secret_repo"
 	authService "github.com/sstalschus/secrets-api/internal/auth"
 	"github.com/sstalschus/secrets-api/internal/secret"
-	"net/http"
 
 	"github.com/sstalschus/secrets-api/infra/hash"
 
@@ -30,6 +34,7 @@ var (
 	logger           log.Provider
 	apiErrors        apierr.Provider
 	authProvider     hash.Provider
+	cacheClient      cache.Provider
 )
 
 func main() {
@@ -37,8 +42,11 @@ func main() {
 	logLevel := env.GetString("LOG_LEVEL", "INFO")
 	databaseURI := env.GetString("DATABASE_URI", "")
 	secretKey := env.GetString("AUTH_SECRET_KEY", "")
+	cacheTTL := env.GetInt("CACHE_TTL", 24)
+	cachePurge := env.GetInt("CACHE_PURGE", 5)
 
 	logger = jsonlogs.New(logLevel, internal.GetCtxValues)
+	cacheClient = memorycache.New(time.Duration(cacheTTL)*time.Hour, time.Duration(cachePurge)*time.Minute)
 	apiErrors = apierr.New()
 	authProvider = hash.NewClient(secretKey)
 

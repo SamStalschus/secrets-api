@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"fmt"
+
 	apierr "github.com/sstalschus/secrets-api/infra/errors"
 	"github.com/sstalschus/secrets-api/infra/hash"
 	"github.com/sstalschus/secrets-api/infra/log"

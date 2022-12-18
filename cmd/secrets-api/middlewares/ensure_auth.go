@@ -2,10 +2,11 @@ package middlewares
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/sstalschus/secrets-api/infra/hash"
 	"github.com/sstalschus/secrets-api/infra/log"
 	"github.com/sstalschus/secrets-api/internal"
-	"net/http"
 )
 
 func EnsureAuth(h http.HandlerFunc, auth hash.Provider, logger log.Provider) http.HandlerFunc {

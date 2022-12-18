@@ -2,6 +2,7 @@ package user_repo
 
 import (
 	"context"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/sstalschus/secrets-api/internal"

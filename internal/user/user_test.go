@@ -3,9 +3,10 @@ package user
 import (
 	"context"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"reflect"
 	"testing"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/golang/mock/gomock"
 	"github.com/sstalschus/secrets-api/infra/hash"

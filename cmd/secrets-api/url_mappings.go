@@ -2,22 +2,25 @@ package main
 
 import (
 	"fmt"
-	"github.com/sstalschus/secrets-api/cmd/secrets-api/middlewares"
-	"github.com/sstalschus/secrets-api/infra/log"
-	"github.com/sstalschus/secrets-api/internal"
 	"net/http"
 	"regexp"
 	"strings"
+
+	"github.com/sstalschus/secrets-api/cmd/secrets-api/middlewares"
+	"github.com/sstalschus/secrets-api/infra/log"
+	"github.com/sstalschus/secrets-api/internal"
 )
 
 var routes []route
 
 func initializeRoutes() {
 	routes = []route{
-		newRoute("GET", "/ping", ping),
+		newRoute("GET", "/ping",
+			middlewares.RateLimiter(ping, logger, cacheClient)),
 		newRoute("POST", "/users",
-			middlewares.HandleRequestID(
-				middlewares.RequestLogger(userController.SignUp, logger))),
+			middlewares.RateLimiter(
+				middlewares.HandleRequestID(
+					middlewares.RequestLogger(userController.SignUp, logger)), logger, cacheClient)),
 
 		newRoute("GET", "/users",
 			middlewares.HandleRequestID(
@@ -64,7 +67,7 @@ func Server(w http.ResponseWriter, r *http.Request) {
 		fmt.Sprintf(
 			"Receivig request of url %s and host %s and method %s",
 			r.URL,
-			r.Host,
+			r.RemoteAddr,
 			r.Method))
 
 	initializeRoutes()

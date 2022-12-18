@@ -4,8 +4,9 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"fmt"
-	"github.com/golang-jwt/jwt/v4"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type Client struct {
@@ -70,7 +71,6 @@ func (c Client) ValidateJwt(token string) (string, error) {
 	tkn, err := jwt.ParseWithClaims(token, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(c.SecretKey), nil
 	})
-
 	if err != nil {
 		return "", err
 	}
