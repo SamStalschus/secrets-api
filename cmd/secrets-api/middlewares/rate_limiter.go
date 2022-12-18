@@ -24,6 +24,13 @@ func RateLimiter(h http.HandlerFunc, log log.Provider, cache cache.Provider) htt
 
 		cache.SetInt(r.Context(), r.RemoteAddr, cached, 5)
 
+		log.Info(r.Context(),
+			fmt.Sprintf(
+				"Receivig request of url %s and IP %s and method %s",
+				r.URL,
+				r.RemoteAddr,
+				r.Method))
+
 		h.ServeHTTP(w, r)
 	}
 }

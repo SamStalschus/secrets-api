@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -17,38 +16,50 @@ func initializeRoutes() {
 	routes = []route{
 		newRoute("GET", "/ping",
 			middlewares.RateLimiter(ping, logger, cacheClient)),
+
 		newRoute("POST", "/users",
 			middlewares.RateLimiter(
 				middlewares.HandleRequestID(
-					middlewares.RequestLogger(userController.SignUp, logger)), logger, cacheClient)),
+					middlewares.RequestLogger(userController.SignUp, logger)),
+				logger, cacheClient)),
 
 		newRoute("GET", "/users",
-			middlewares.HandleRequestID(
-				middlewares.RequestLogger(
-					middlewares.EnsureAuth(
-						userController.GetUser, authProvider, logger), logger))),
+			middlewares.RateLimiter(
+				middlewares.HandleRequestID(
+					middlewares.RequestLogger(
+						middlewares.EnsureAuth(
+							userController.GetUser, authProvider, logger), logger)),
+				logger, cacheClient)),
 
 		newRoute("POST", "/token",
-			middlewares.HandleRequestID(
-				middlewares.RequestLogger(authController.Authenticate, logger))),
+			middlewares.RateLimiter(
+				middlewares.HandleRequestID(
+					middlewares.RequestLogger(authController.Authenticate, logger)),
+				logger, cacheClient)),
 
 		newRoute("POST", "/secrets",
-			middlewares.HandleRequestID(
-				middlewares.RequestLogger(
-					middlewares.EnsureAuth(
-						secretController.CreateSecret, authProvider, logger), logger))),
+			middlewares.RateLimiter(
+				middlewares.HandleRequestID(
+					middlewares.RequestLogger(
+						middlewares.EnsureAuth(
+							secretController.CreateSecret, authProvider, logger), logger)),
+				logger, cacheClient)),
 
 		newRoute("GET", "/secrets",
-			middlewares.HandleRequestID(
-				middlewares.RequestLogger(
-					middlewares.EnsureAuth(
-						secretController.GetSecrets, authProvider, logger), logger))),
+			middlewares.RateLimiter(
+				middlewares.HandleRequestID(
+					middlewares.RequestLogger(
+						middlewares.EnsureAuth(
+							secretController.GetSecrets, authProvider, logger), logger)),
+				logger, cacheClient)),
 
 		newRoute("GET", "/secrets/([^/]+)",
-			middlewares.HandleRequestID(
-				middlewares.RequestLogger(
-					middlewares.EnsureAuth(
-						secretController.GetSecret, authProvider, logger), logger))),
+			middlewares.RateLimiter(
+				middlewares.HandleRequestID(
+					middlewares.RequestLogger(
+						middlewares.EnsureAuth(
+							secretController.GetSecret, authProvider, logger), logger)),
+				logger, cacheClient)),
 	}
 }
 
@@ -63,13 +74,6 @@ type route struct {
 }
 
 func Server(w http.ResponseWriter, r *http.Request) {
-	logger.Info(r.Context(),
-		fmt.Sprintf(
-			"Receivig request of url %s and host %s and method %s",
-			r.URL,
-			r.RemoteAddr,
-			r.Method))
-
 	initializeRoutes()
 	var allow []string
 	for _, route := range routes {
