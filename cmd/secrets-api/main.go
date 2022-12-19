@@ -31,10 +31,11 @@ var (
 	userController   *user_ctrl.Controller
 	authController   *auth_ctrl.Controller
 	secretController *secret_ctrl.Controller
-	logger           log.Provider
-	apiErrors        apierr.Provider
-	authProvider     hash.Provider
-	cacheClient      cache.Provider
+
+	logger       log.Provider
+	apiErrors    apierr.Provider
+	authProvider hash.Provider
+	cacheClient  cache.Provider
 )
 
 func main() {
@@ -56,10 +57,10 @@ func main() {
 	mongoRepository := mongodb.NewRepository(db)
 
 	userRepository := user_repo.NewRepository(&mongoRepository)
-	userService := user.NewService(logger, &userRepository, apiErrors, authProvider)
+	userService := user.NewService(logger, &userRepository, apiErrors, authProvider, cacheClient)
 	userController = user_ctrl.NewController(userService, logger, apiErrors)
 
-	authService := authService.NewService(apiErrors, authProvider, logger, &userRepository)
+	authService := authService.NewService(apiErrors, authProvider, cacheClient, logger, &userService)
 	authController = auth_ctrl.NewController(authService, logger, apiErrors)
 
 	secretRepository := secret_repo.NewRepository(&mongoRepository)

@@ -28,7 +28,7 @@ func initializeRoutes() {
 				middlewares.HandleRequestID(
 					middlewares.RequestLogger(
 						middlewares.EnsureAuth(
-							userController.GetUser, authProvider, logger), logger)),
+							userController.GetUser, authProvider, logger, cacheClient), logger)),
 				logger, cacheClient)),
 
 		newRoute("POST", "/token",
@@ -42,7 +42,7 @@ func initializeRoutes() {
 				middlewares.HandleRequestID(
 					middlewares.RequestLogger(
 						middlewares.EnsureAuth(
-							secretController.CreateSecret, authProvider, logger), logger)),
+							secretController.CreateSecret, authProvider, logger, cacheClient), logger)),
 				logger, cacheClient)),
 
 		newRoute("GET", "/secrets",
@@ -50,7 +50,7 @@ func initializeRoutes() {
 				middlewares.HandleRequestID(
 					middlewares.RequestLogger(
 						middlewares.EnsureAuth(
-							secretController.GetSecrets, authProvider, logger), logger)),
+							secretController.GetSecrets, authProvider, logger, cacheClient), logger)),
 				logger, cacheClient)),
 
 		newRoute("GET", "/secrets/([^/]+)",
@@ -58,7 +58,7 @@ func initializeRoutes() {
 				middlewares.HandleRequestID(
 					middlewares.RequestLogger(
 						middlewares.EnsureAuth(
-							secretController.GetSecret, authProvider, logger), logger)),
+							secretController.GetSecret, authProvider, logger, cacheClient), logger)),
 				logger, cacheClient)),
 	}
 }

@@ -16,4 +16,5 @@ type IRepository interface {
 	FindWithPasswordByEmail(ctx context.Context, email string) (user *internal.User, err error)
 	FindUserByID(ctx context.Context, id string) (user *internal.User, err error)
 	GenerateID() primitive.ObjectID
+	UpdateStatus(ctx context.Context, user *internal.User) error
 }

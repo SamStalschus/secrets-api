@@ -47,6 +47,20 @@ func (mr *MockProviderMockRecorder) BadRequest(message, err interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BadRequest", reflect.TypeOf((*MockProvider)(nil).BadRequest), message, err)
 }
 
+// Blocked mocks base method.
+func (m *MockProvider) Blocked() *Message {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Blocked")
+	ret0, _ := ret[0].(*Message)
+	return ret0
+}
+
+// Blocked indicates an expected call of Blocked.
+func (mr *MockProviderMockRecorder) Blocked() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Blocked", reflect.TypeOf((*MockProvider)(nil).Blocked))
+}
+
 // InternalServerError mocks base method.
 func (m *MockProvider) InternalServerError(err error) *Message {
 	m.ctrl.T.Helper()

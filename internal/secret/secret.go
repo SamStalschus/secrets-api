@@ -49,7 +49,10 @@ func (s Service) CreateSecret(ctx context.Context, secret *internal.Secret, user
 
 	secret.Key = string(keyHash)
 	secret.Value = string(valueHash)
+
 	s.setTimestamps(secret)
+
+	s.setCreatedStatus(secret)
 
 	err = s.repository.CreateSecret(ctx, secret, userID)
 	if err != nil {
@@ -58,11 +61,6 @@ func (s Service) CreateSecret(ctx context.Context, secret *internal.Secret, user
 	}
 
 	return apiErr
-}
-
-func (s Service) setTimestamps(secret *internal.Secret) {
-	secret.CreatedAt = time.Now()
-	secret.UpdatedAt = time.Now()
 }
 
 func (s Service) GetSecrets(ctx context.Context, userID string) *[]internal.Secret {
@@ -105,4 +103,14 @@ func (s Service) decryptKeys(doDecrypt *[]internal.Secret) *[]internal.Secret {
 		secrets = append(secrets, secret)
 	}
 	return &secrets
+}
+
+func (s Service) setTimestamps(secret *internal.Secret) {
+	secret.CreatedAt = time.Now()
+	secret.UpdatedAt = time.Now()
+}
+
+func (s Service) setCreatedStatus(secret *internal.Secret) {
+	secret.Status = internal.ActiveStatus
+	secret.StatusDetail = internal.CreatedStatusDetail
 }

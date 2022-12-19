@@ -51,3 +51,12 @@ func (c Client) Unauthorized(message string) *Message {
 		Error:        nil,
 	}
 }
+
+func (c Client) Blocked() *Message {
+	return &Message{
+		ErrorMessage: "Your user has been blocked or deleted. Please contact our support support@email.com",
+		ErrorCode:    http.StatusText(http.StatusForbidden),
+		ErrorStatus:  http.StatusForbidden,
+		Error:        nil,
+	}
+}

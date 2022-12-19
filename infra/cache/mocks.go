@@ -34,28 +34,54 @@ func (m *MockProvider) EXPECT() *MockProviderMockRecorder {
 	return m.recorder
 }
 
-// Get mocks base method.
-func (m *MockProvider) Get(ctx context.Context, key string) int {
+// GetInt mocks base method.
+func (m *MockProvider) GetInt(ctx context.Context, key string) int {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", ctx, key)
+	ret := m.ctrl.Call(m, "GetInt", ctx, key)
 	ret0, _ := ret[0].(int)
 	return ret0
 }
 
-// Get indicates an expected call of Get.
-func (mr *MockProviderMockRecorder) Get(ctx, key interface{}) *gomock.Call {
+// GetInt indicates an expected call of GetInt.
+func (mr *MockProviderMockRecorder) GetInt(ctx, key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockProvider)(nil).Get), ctx, key)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInt", reflect.TypeOf((*MockProvider)(nil).GetInt), ctx, key)
 }
 
-// Set mocks base method.
-func (m *MockProvider) Set(ctx context.Context, key string, value int) {
+// GetMap mocks base method.
+func (m *MockProvider) GetMap(ctx context.Context, key string) map[string]string {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Set", ctx, key, value)
+	ret := m.ctrl.Call(m, "GetMap", ctx, key)
+	ret0, _ := ret[0].(map[string]string)
+	return ret0
 }
 
-// Set indicates an expected call of Set.
-func (mr *MockProviderMockRecorder) Set(ctx, key, value interface{}) *gomock.Call {
+// GetMap indicates an expected call of GetMap.
+func (mr *MockProviderMockRecorder) GetMap(ctx, key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockProvider)(nil).Set), ctx, key, value)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMap", reflect.TypeOf((*MockProvider)(nil).GetMap), ctx, key)
+}
+
+// SetInt mocks base method.
+func (m *MockProvider) SetInt(ctx context.Context, key string, value, ttl int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetInt", ctx, key, value, ttl)
+}
+
+// SetInt indicates an expected call of SetInt.
+func (mr *MockProviderMockRecorder) SetInt(ctx, key, value, ttl interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInt", reflect.TypeOf((*MockProvider)(nil).SetInt), ctx, key, value, ttl)
+}
+
+// SetMap mocks base method.
+func (m *MockProvider) SetMap(ctx context.Context, key string, value map[string]string, ttl int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetMap", ctx, key, value, ttl)
+}
+
+// SetMap indicates an expected call of SetMap.
+func (mr *MockProviderMockRecorder) SetMap(ctx, key, value, ttl interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetMap", reflect.TypeOf((*MockProvider)(nil).SetMap), ctx, key, value, ttl)
 }

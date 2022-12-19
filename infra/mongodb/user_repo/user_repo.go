@@ -57,3 +57,15 @@ func (r Repository) FindUserByID(ctx context.Context, id string) (user *internal
 func (r Repository) GenerateID() primitive.ObjectID {
 	return primitive.NewObjectID()
 }
+
+func (r Repository) UpdateStatus(ctx context.Context, user *internal.User) error {
+	_, err := r.repository.UpdateOne(ctx, collection, bson.M{"_id": user.Id},
+		bson.M{
+			"$set": bson.M{
+				"status":        user.Status,
+				"status_detail": user.StatusDetail,
+			},
+		})
+
+	return err
+}

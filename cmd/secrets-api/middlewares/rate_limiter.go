@@ -12,7 +12,7 @@ func RateLimiter(h http.HandlerFunc, log log.Provider, cache cache.Provider) htt
 	return func(w http.ResponseWriter, r *http.Request) {
 		var cached int
 
-		if cached = cache.GetInt(r.Context(), r.RemoteAddr); cached > 20 {
+		if cached = cache.GetInt(r.Context(), r.RemoteAddr); cached > 25 {
 			log.Error(r.Context(), fmt.Sprintf("To many requests of %s", r.RemoteAddr))
 
 			w.WriteHeader(http.StatusTooManyRequests)
@@ -23,13 +23,6 @@ func RateLimiter(h http.HandlerFunc, log log.Provider, cache cache.Provider) htt
 		increment(&cached)
 
 		cache.SetInt(r.Context(), r.RemoteAddr, cached, 5)
-
-		log.Info(r.Context(),
-			fmt.Sprintf(
-				"Receivig request of url %s and IP %s and method %s",
-				r.URL,
-				r.RemoteAddr,
-				r.Method))
 
 		h.ServeHTTP(w, r)
 	}

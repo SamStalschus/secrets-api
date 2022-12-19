@@ -20,6 +20,8 @@ func RequestLogger(h http.HandlerFunc, logger log.Provider) http.HandlerFunc {
 			"route":        r.Method + " " + r.URL.Path,
 			"request_body": body,
 			"duration_ms":  time.Since(startTime).Milliseconds(),
+			"IP":           r.RemoteAddr,
 		})
+
 	}
 }

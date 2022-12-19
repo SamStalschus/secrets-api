@@ -36,6 +36,18 @@ func (m *MockIService) EXPECT() *MockIServiceMockRecorder {
 	return m.recorder
 }
 
+// BlockUserBySuspect mocks base method.
+func (m *MockIService) BlockUserBySuspect(ctx context.Context, user *internal.User) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "BlockUserBySuspect", ctx, user)
+}
+
+// BlockUserBySuspect indicates an expected call of BlockUserBySuspect.
+func (mr *MockIServiceMockRecorder) BlockUserBySuspect(ctx, user interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockUserBySuspect", reflect.TypeOf((*MockIService)(nil).BlockUserBySuspect), ctx, user)
+}
+
 // CreateUser mocks base method.
 func (m *MockIService) CreateUser(ctx context.Context, user *internal.User) *apierr.Message {
 	m.ctrl.T.Helper()
@@ -48,6 +60,21 @@ func (m *MockIService) CreateUser(ctx context.Context, user *internal.User) *api
 func (mr *MockIServiceMockRecorder) CreateUser(ctx, user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockIService)(nil).CreateUser), ctx, user)
+}
+
+// FindWithPasswordByEmail mocks base method.
+func (m *MockIService) FindWithPasswordByEmail(ctx context.Context, email string) (*internal.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindWithPasswordByEmail", ctx, email)
+	ret0, _ := ret[0].(*internal.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindWithPasswordByEmail indicates an expected call of FindWithPasswordByEmail.
+func (mr *MockIServiceMockRecorder) FindWithPasswordByEmail(ctx, email interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindWithPasswordByEmail", reflect.TypeOf((*MockIService)(nil).FindWithPasswordByEmail), ctx, email)
 }
 
 // GetUser mocks base method.
@@ -63,4 +90,18 @@ func (m *MockIService) GetUser(ctx context.Context, userID string) (*internal.Us
 func (mr *MockIServiceMockRecorder) GetUser(ctx, userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockIService)(nil).GetUser), ctx, userID)
+}
+
+// IsValidUser mocks base method.
+func (m *MockIService) IsValidUser(ctx context.Context, email string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsValidUser", ctx, email)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsValidUser indicates an expected call of IsValidUser.
+func (mr *MockIServiceMockRecorder) IsValidUser(ctx, email interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsValidUser", reflect.TypeOf((*MockIService)(nil).IsValidUser), ctx, email)
 }

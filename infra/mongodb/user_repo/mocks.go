@@ -109,3 +109,17 @@ func (mr *MockIRepositoryMockRecorder) GenerateID() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateID", reflect.TypeOf((*MockIRepository)(nil).GenerateID))
 }
+
+// UpdateStatus mocks base method.
+func (m *MockIRepository) UpdateStatus(ctx context.Context, user *internal.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateStatus", ctx, user)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateStatus indicates an expected call of UpdateStatus.
+func (mr *MockIRepositoryMockRecorder) UpdateStatus(ctx, user interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockIRepository)(nil).UpdateStatus), ctx, user)
+}
